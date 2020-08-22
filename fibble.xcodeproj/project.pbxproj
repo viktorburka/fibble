@@ -15,6 +15,7 @@
 		F7245C9A24ECBF640047322D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F7245C9824ECBF640047322D /* LaunchScreen.storyboard */; };
 		F7245CA224EEE5000047322D /* HeartRateListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7245CA124EEE5000047322D /* HeartRateListener.swift */; };
 		F7245CA424F090180047322D /* HeartRateSensorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7245CA324F090180047322D /* HeartRateSensorDelegate.swift */; };
+		F7245CAA24F0BBD00047322D /* WorkoutScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7245CA924F0BBD00047322D /* WorkoutScreen.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		F7245C9B24ECBF640047322D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F7245CA124EEE5000047322D /* HeartRateListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateListener.swift; sourceTree = "<group>"; };
 		F7245CA324F090180047322D /* HeartRateSensorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateSensorDelegate.swift; sourceTree = "<group>"; };
+		F7245CA924F0BBD00047322D /* WorkoutScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +71,7 @@
 				F7245C9524ECBF640047322D /* Preview Content */,
 				F7245CA124EEE5000047322D /* HeartRateListener.swift */,
 				F7245CA324F090180047322D /* HeartRateSensorDelegate.swift */,
+				F7245CA924F0BBD00047322D /* WorkoutScreen.swift */,
 			);
 			path = fibble;
 			sourceTree = "<group>";
@@ -157,6 +160,7 @@
 				F7245C9024ECBF620047322D /* SceneDelegate.swift in Sources */,
 				F7245CA424F090180047322D /* HeartRateSensorDelegate.swift in Sources */,
 				F7245C9224ECBF620047322D /* ContentView.swift in Sources */,
+				F7245CAA24F0BBD00047322D /* WorkoutScreen.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -41,8 +41,6 @@ class HeartRateSensorDelegate: NSObject, CBPeripheralDelegate {
         case heartRateMeasurementCharacteristicCBUUID:
             let bpm = heartRate(from: characteristic)
             self.currentHeartRate = bpm
-            print("hr: \(bpm)")
-            //onHeartRateReceived(bpm)
         default:
           print("Unhandled Characteristic UUID: \(characteristic.uuid)")
       }
