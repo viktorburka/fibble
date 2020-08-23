@@ -19,12 +19,12 @@ struct WorkoutScreen: View {
     @State private var showingAlert = false
     var body: some View {
         VStack {
-            Spacer()
+//            Spacer().frame(height: 10)
             Text(String(format: "%02d:%02d:%02d", Int(self.ti) / 3600, Int(self.ti) / 60 % 60, Int(self.ti) % 60)).font(Font.system(size: 80).monospacedDigit())
             Spacer()
-            Text("\(self.hr)").font(Font.system(size: 100).monospacedDigit())
+            Text("\(self.hr)").font(Font.system(size: 140).monospacedDigit())
             Spacer()
-            Text("Laps").font(.system(size: 80))
+            Text("Laps").font(.system(size: 60))
             Spacer()
             Button(action: {
                 self.showingAlert = true
