@@ -15,7 +15,7 @@ struct WorkoutScreen: View {
     @State var fileHandle: FileHandle?
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State var ti = TimeInterval()
-    @State var hr = "---"
+    @State var hr = "127"
     @State var timer: Timer?
     @State var heartRate = HeartRateListener()
     @State var centralManager: CBCentralManager!
