@@ -16,6 +16,8 @@
 		F7245CA224EEE5000047322D /* HeartRateListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7245CA124EEE5000047322D /* HeartRateListener.swift */; };
 		F7245CA424F090180047322D /* HeartRateSensorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7245CA324F090180047322D /* HeartRateSensorDelegate.swift */; };
 		F7245CAA24F0BBD00047322D /* WorkoutScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7245CA924F0BBD00047322D /* WorkoutScreen.swift */; };
+		F7245CD424F2164D0047322D /* WorkoutDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7245CD324F2164D0047322D /* WorkoutDataStore.swift */; };
+		F740062B24F2EF9C00564CDF /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = F740062A24F2EF9C00564CDF /* Tools.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +32,8 @@
 		F7245CA124EEE5000047322D /* HeartRateListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateListener.swift; sourceTree = "<group>"; };
 		F7245CA324F090180047322D /* HeartRateSensorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateSensorDelegate.swift; sourceTree = "<group>"; };
 		F7245CA924F0BBD00047322D /* WorkoutScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutScreen.swift; sourceTree = "<group>"; };
+		F7245CD324F2164D0047322D /* WorkoutDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutDataStore.swift; sourceTree = "<group>"; };
+		F740062A24F2EF9C00564CDF /* Tools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tools.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +76,8 @@
 				F7245CA124EEE5000047322D /* HeartRateListener.swift */,
 				F7245CA324F090180047322D /* HeartRateSensorDelegate.swift */,
 				F7245CA924F0BBD00047322D /* WorkoutScreen.swift */,
+				F7245CD324F2164D0047322D /* WorkoutDataStore.swift */,
+				F740062A24F2EF9C00564CDF /* Tools.swift */,
 			);
 			path = fibble;
 			sourceTree = "<group>";
@@ -156,11 +162,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				F7245CA224EEE5000047322D /* HeartRateListener.swift in Sources */,
+				F7245CD424F2164D0047322D /* WorkoutDataStore.swift in Sources */,
 				F7245C8E24ECBF620047322D /* AppDelegate.swift in Sources */,
 				F7245C9024ECBF620047322D /* SceneDelegate.swift in Sources */,
 				F7245CA424F090180047322D /* HeartRateSensorDelegate.swift in Sources */,
 				F7245C9224ECBF620047322D /* ContentView.swift in Sources */,
 				F7245CAA24F0BBD00047322D /* WorkoutScreen.swift in Sources */,
+				F740062B24F2EF9C00564CDF /* Tools.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
