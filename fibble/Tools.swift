@@ -12,3 +12,15 @@ enum MainScreenState {
     case ok
     case error
 }
+
+struct Zone {
+    var start, end: Int
+}
+
+func updateZoneHighlight(heartRate: Int, zones: [Zone]) -> [Bool] {
+    var highlights: [Bool] = []
+    for zone in zones {
+        highlights.append(heartRate >= zone.start && heartRate <= zone.end)
+    }
+    return highlights
+}
