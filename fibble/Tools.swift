@@ -8,19 +8,35 @@
 
 import Foundation
 
-enum MainScreenState {
-    case ok
-    case error
-}
-
-struct Zone {
+class Zone: Hashable, Identifiable {
+    var id: Int { get { return number } }
+    var number: Int
     var start, end: Int
-}
-
-func updateZoneHighlight(heartRate: Int, zones: [Zone]) -> [Bool] {
-    var highlights: [Bool] = []
-    for zone in zones {
-        highlights.append(heartRate >= zone.start && heartRate <= zone.end)
+    var highlighted: Bool
+    
+    init(number: Int, start: Int, end: Int, highlighted: Bool) {
+        self.number = number
+        self.start = start
+        self.end = end
+        self.highlighted = highlighted
     }
-    return highlights
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(number)
+    }
+    
+    func updateHighlighting(heartRate: Int) {
+        if number == 1 && heartRate < start {
+            highlighted = true
+            return
+        }
+        highlighted = heartRate >= start && heartRate <= end
+    }
+    
+    static func == (lhs: Zone, rhs: Zone) -> Bool {
+        return lhs.number == rhs.number &&
+               lhs.start == rhs.start &&
+               lhs.end == rhs.end &&
+               lhs.highlighted == rhs.highlighted
+    }
 }

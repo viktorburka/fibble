@@ -18,6 +18,12 @@
 		F7245CAA24F0BBD00047322D /* WorkoutScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7245CA924F0BBD00047322D /* WorkoutScreen.swift */; };
 		F7245CD424F2164D0047322D /* WorkoutDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7245CD324F2164D0047322D /* WorkoutDataStore.swift */; };
 		F740062B24F2EF9C00564CDF /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = F740062A24F2EF9C00564CDF /* Tools.swift */; };
+		F759390C24F7588E006FB243 /* ZoneRangeText.swift in Sources */ = {isa = PBXBuildFile; fileRef = F759390B24F7588E006FB243 /* ZoneRangeText.swift */; };
+		F759390E24F75D0B006FB243 /* ElapsedTimeText.swift in Sources */ = {isa = PBXBuildFile; fileRef = F759390D24F75D0B006FB243 /* ElapsedTimeText.swift */; };
+		F759391024F75F31006FB243 /* EndWorkoutAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = F759390F24F75F31006FB243 /* EndWorkoutAlert.swift */; };
+		F759391224F868AB006FB243 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F759391124F868AB006FB243 /* Settings.swift */; };
+		F759391424F869C3006FB243 /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F759391324F869C3006FB243 /* SettingsScreen.swift */; };
+		F759391624F8877C006FB243 /* StartScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F759391524F8877C006FB243 /* StartScreen.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +40,12 @@
 		F7245CA924F0BBD00047322D /* WorkoutScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutScreen.swift; sourceTree = "<group>"; };
 		F7245CD324F2164D0047322D /* WorkoutDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutDataStore.swift; sourceTree = "<group>"; };
 		F740062A24F2EF9C00564CDF /* Tools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tools.swift; sourceTree = "<group>"; };
+		F759390B24F7588E006FB243 /* ZoneRangeText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoneRangeText.swift; sourceTree = "<group>"; };
+		F759390D24F75D0B006FB243 /* ElapsedTimeText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElapsedTimeText.swift; sourceTree = "<group>"; };
+		F759390F24F75F31006FB243 /* EndWorkoutAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndWorkoutAlert.swift; sourceTree = "<group>"; };
+		F759391124F868AB006FB243 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		F759391324F869C3006FB243 /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
+		F759391524F8877C006FB243 /* StartScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +90,12 @@
 				F7245CA924F0BBD00047322D /* WorkoutScreen.swift */,
 				F7245CD324F2164D0047322D /* WorkoutDataStore.swift */,
 				F740062A24F2EF9C00564CDF /* Tools.swift */,
+				F759390B24F7588E006FB243 /* ZoneRangeText.swift */,
+				F759390D24F75D0B006FB243 /* ElapsedTimeText.swift */,
+				F759390F24F75F31006FB243 /* EndWorkoutAlert.swift */,
+				F759391124F868AB006FB243 /* Settings.swift */,
+				F759391324F869C3006FB243 /* SettingsScreen.swift */,
+				F759391524F8877C006FB243 /* StartScreen.swift */,
 			);
 			path = fibble;
 			sourceTree = "<group>";
@@ -162,10 +180,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				F7245CA224EEE5000047322D /* HeartRateListener.swift in Sources */,
+				F759390C24F7588E006FB243 /* ZoneRangeText.swift in Sources */,
+				F759390E24F75D0B006FB243 /* ElapsedTimeText.swift in Sources */,
 				F7245CD424F2164D0047322D /* WorkoutDataStore.swift in Sources */,
+				F759391024F75F31006FB243 /* EndWorkoutAlert.swift in Sources */,
 				F7245C8E24ECBF620047322D /* AppDelegate.swift in Sources */,
+				F759391224F868AB006FB243 /* Settings.swift in Sources */,
+				F759391424F869C3006FB243 /* SettingsScreen.swift in Sources */,
 				F7245C9024ECBF620047322D /* SceneDelegate.swift in Sources */,
 				F7245CA424F090180047322D /* HeartRateSensorDelegate.swift in Sources */,
+				F759391624F8877C006FB243 /* StartScreen.swift in Sources */,
 				F7245C9224ECBF620047322D /* ContentView.swift in Sources */,
 				F7245CAA24F0BBD00047322D /* WorkoutScreen.swift in Sources */,
 				F740062B24F2EF9C00564CDF /* Tools.swift in Sources */,

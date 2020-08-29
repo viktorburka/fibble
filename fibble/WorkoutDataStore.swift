@@ -19,19 +19,15 @@ class WorkoutDataStore {
         guard let url = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
             return nil
         }
-        print("url: \(url)")
         
-        var workouts: [URL]
-        do {
-            workouts = try fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: nil)
-        } catch {
+        let workouts = try? fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: nil)
+        if workouts == nil {
             return nil
         }
         
         var lastIdx = 0
         
-        for workout in workouts {
-            print("workout: \(workout)")
+        for workout in workouts! {
             let id = Int(workout.lastPathComponent) ?? 0
             if id > lastIdx {
                 lastIdx = id
@@ -47,18 +43,17 @@ class WorkoutDataStore {
         }
         
         let nextWorkoutDir = rootUrl.appendingPathComponent(String(workoutId))
-        print("next workout url: \(nextWorkoutDir)")
         let workoutDataFilePath = nextWorkoutDir.appendingPathComponent("data")
         
         do {
             try fileManager.createDirectory(at: nextWorkoutDir, withIntermediateDirectories: false, attributes: nil)
-            if !fileManager.createFile(atPath: workoutDataFilePath.path, contents: nil, attributes: nil) {
-                print("can't create file \(workoutDataFilePath.absoluteString)")
-                return nil
-            }
-            print("file created")
         } catch {
             print("error create workout \(workoutId) directory: \(error)")
+            return nil
+        }
+        
+        if !fileManager.createFile(atPath: workoutDataFilePath.path, contents: nil, attributes: nil) {
+            print("can't create file \(workoutDataFilePath.lastPathComponent)")
             return nil
         }
         
