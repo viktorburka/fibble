@@ -117,12 +117,18 @@ class WorkoutReport: ObservableObject {
         // duration
         let duration = data.start.distance(to: data.end)
         report[1].value = formatDuration(duration: duration)
-        
+
         // heart rate
         report[2].value = String(format: "%d bpm", data.avgHeartRate)
         
         // calories
-        report[3].value = String(format: "%d cal", data.calories)
+        let weightKg = 79.0
+        let age = 36.0
+        let v1 = 0.6309 * Double(data.avgHeartRate)
+        let v2 = 0.1988 * weightKg
+        let v3 = 0.2017 * age
+        let calories = ((-55.0969 + v1 + v2 + v3)/4.184) * duration / 60.0
+        report[3].value = String(format: "%.1f cal", calories)
         
         return report
     }
