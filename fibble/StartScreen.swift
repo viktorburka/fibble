@@ -10,38 +10,53 @@ import SwiftUI
 
 struct StartScreen: View {
     @State var screenState: StartScreenState = StartScreenState()
+    @State var store = WorkoutDataStore()
     var body: some View {
         NavigationView {
             VStack {
+            VStack {
                 Text("\(screenState.errorText)")
                     .opacity(self.screenState.state == .ok ? 0.0 : 1.0)
+                    .foregroundColor(.red)
+                Spacer().frame(height: 20)
                 Button(action: startWorkout) {
                     NavigationLink(destination: WorkoutScreen()) {
                         Text("Start Workout")
                     }
                 }
-                Spacer()
-                    .frame(height: 50)
+                Spacer().frame(height: 30)
                 Button(action: startFtpTest) {
-                    NavigationLink(destination: WorkoutScreen()) {
+                    //NavigationLink(destination: WorkoutScreen()) {
                         Text("Start FTP Test")
-                    }
+                    //}
                 }
+                Spacer().frame(height: 80)
+            }
+            VStack {
                 Divider()
                 Text("Last Workout")
                     .font(.body)
                 List(screenState.lastReport.reportData) { data in
                     HStack {
-                        Text("\(data.label)")
+                        Text("\(data.label)").foregroundColor(.gray)
                         Spacer()
-                        Text("\(data.value)")
+                        Text("\(data.value)").foregroundColor(.gray)
                     }
                 }
                 .frame(maxHeight: .infinity)
+            }.frame(maxHeight: .infinity)
             }
         }
         .onAppear {
-        
+            let result = self.store.lastWorkoutData()
+            guard let workout = result.data else {
+                print("error load last workout data: ", result.error)
+                self.screenState.state = .error
+                self.screenState.errorText = "Error load last workout data"
+                return
+            }
+            self.screenState.lastReport.setWorkout(data: workout)
+            //updateLastWorkoutReport(self)
         }
     }
     
@@ -78,9 +93,37 @@ struct ReportData: Identifiable {
 }
 
 struct WorkoutReport {
-    var start = Date()
-    var end = Date()
-    var avgHeartRate = 0
-    var calories = 0
-    var reportData = [ReportData]()
+    var reportData: [ReportData]
+    static let template = [
+        ReportData(id: 0, label: "Workout Start", value: ""),
+        ReportData(id: 1, label: "Workout End", value: ""),
+        ReportData(id: 2, label: "Avg Heart Rate", value: ""),
+        ReportData(id: 3, label: "Calories", value: "")
+    ]
+    
+    init() {
+        reportData = WorkoutReport.template
+    }
+    
+    static func buildReport(data: WorkoutData) -> [ReportData] {
+        var report = WorkoutReport.template
+        
+        // start, end
+        let fmt = DateFormatter()
+        fmt.dateFormat = "HH:mm:ss E, d MMM y"
+        report[0].value = fmt.string(from: data.start)
+        report[1].value = fmt.string(from: data.end)
+        
+        // heart rate
+        report[2].value = String(data.avgHeartRate)
+        
+        // calories
+        report[3].value = String(data.calories)
+        
+        return report
+    }
+    
+    func setWorkout(data: WorkoutData) {
+        
+    }
 }

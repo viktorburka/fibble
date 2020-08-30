@@ -40,3 +40,25 @@ class Zone: Hashable, Identifiable {
                lhs.highlighted == rhs.highlighted
     }
 }
+
+func dataToIntArr(data: Data) -> [Int] {
+    var numbers: [Int] = []
+    var iter = data.makeIterator()
+    while true {
+        guard
+            let b1 = iter.next(),
+            let b2 = iter.next(),
+            let b3 = iter.next(),
+            let b4 = iter.next(),
+            let b5 = iter.next(),
+            let b6 = iter.next(),
+            let b7 = iter.next(),
+            let b8 = iter.next()
+        else {
+            break
+        }
+        let num = Int(b1) << 56 | Int(b2) << 48 | Int(b3) << 40 | Int(b4) << 32 | Int(b5) << 24 | Int(b6) << 16 | Int(b7) << 8 | Int(b8)
+        numbers.append(num)
+    }
+    return numbers
+}

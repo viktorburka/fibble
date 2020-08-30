@@ -24,6 +24,8 @@ struct WorkoutScreen: View {
     @State var showingAlert = false
     @State var state: ScreenState = .ok
     @State var zones: [Zone] = []
+    @State var startTime = Date()
+    @State var endTime = Date()
     var body: some View {
         VStack {
             Text(self.state == .ok ? "Workout \(workoutId)" : "Workout can't be recoreded")
@@ -51,6 +53,8 @@ struct WorkoutScreen: View {
                     title: Text("End this workout?"),
                     message: nil,
                     primaryButton: .destructive(Text("End Workout")) {
+                        self.endTime = Date()
+                        self.store.saveWorkoutData(workoutId: self.workoutId, start: self.startTime, end: self.endTime)
                         self.presentationMode.wrappedValue.dismiss()
                     },
                     secondaryButton: .cancel()
@@ -91,6 +95,7 @@ struct WorkoutScreen: View {
                 }
                 self.state = workoutStore == nil ? .error : .ok
             }
+            self.startTime = Date()
         }
         .onDisappear {
             self.timer!.invalidate()
