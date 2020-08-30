@@ -26,6 +26,7 @@ struct WorkoutScreen: View {
     @State var zones: [Zone] = []
     @State var startTime = Date()
     @State var endTime = Date()
+    @ObservedObject var lastReport: WorkoutReport
     var body: some View {
         VStack {
             Text(self.state == .ok ? "Workout \(workoutId)" : "Workout can't be recoreded")
@@ -54,7 +55,15 @@ struct WorkoutScreen: View {
                     message: nil,
                     primaryButton: .destructive(Text("End Workout")) {
                         self.endTime = Date()
-                        self.store.saveWorkoutData(workoutId: self.workoutId, start: self.startTime, end: self.endTime)
+                        _ = self.store.saveWorkoutInfo(workoutId: self.workoutId, workout: WorkoutInfo(start: self.startTime, end: self.endTime))
+                        //self.lastReport.reportData = WorkoutReport.buildReport(data: WorkoutData())
+                        let result = self.store.lastWorkoutData()
+                        if let workout = result.data {
+                            self.lastReport.reportData = WorkoutReport.buildReport(data: workout)
+                        } else {
+                            print("error load last workout data: ", result.error)
+                            self.state = .error
+                        }
                         self.presentationMode.wrappedValue.dismiss()
                     },
                     secondaryButton: .cancel()
@@ -64,6 +73,7 @@ struct WorkoutScreen: View {
         }
         .navigationBarBackButtonHidden(true)
         .onAppear {
+            print("appear")
             let settings = Settings()
             for hrz in settings.heartRateZones {
                 self.zones.append(Zone(number: hrz.number, start: hrz.start, end: hrz.end, highlighted: false))
@@ -98,6 +108,7 @@ struct WorkoutScreen: View {
             self.startTime = Date()
         }
         .onDisappear {
+            print("disappear")
             self.timer!.invalidate()
             try? self.fileHandle?.close()
         }
@@ -106,6 +117,6 @@ struct WorkoutScreen: View {
 
 struct WorkoutScreen_Previews: PreviewProvider {
     static var previews: some View {
-        WorkoutScreen()
+        WorkoutScreen(lastReport: WorkoutReport())
     }
 }

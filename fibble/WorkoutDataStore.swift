@@ -78,22 +78,25 @@ class WorkoutDataStore {
         let lastWorkoutDir = docDir.appendingPathComponent(String(stats.lastWorkoutId))
         
         let infoResult = loadWorkoutInfo(lastWorkoutDir.appendingPathComponent("info"))
-        guard let workout = infoResult.info else {
-            return (nil, String(format: "error load workout info file: %s", infoResult.error))
+        guard let info = infoResult.info else {
+            return (nil, String(format: "error load workout info file: %@", infoResult.error))
         }
         
         let dataResult = loadWorkoutData(lastWorkoutDir.appendingPathComponent("data"))
         guard let data = dataResult.data else {
-            return (nil, String(format: "error load workout info file: %s", dataResult.error))
+            return (nil, String(format: "error load workout data file: %@", dataResult.error))
         }
         
-        var copy = workout
-        copy.avgHeartRate = caclulateAvgHeartRate(data)
+        let workout = WorkoutData(
+            start: info.startDate(),
+            end: info.endDate(),
+            avgHeartRate: caclulateAvgHeartRate(data)
+        )
         
-        return (copy, "")
+        return (workout, "")
     }
     
-    func loadWorkoutInfo(_ url: URL) -> (info: WorkoutData?, error: String) {
+    func loadWorkoutInfo(_ url: URL) -> (info: WorkoutInfo?, error: String) {
         var jsonResult: Any
         do {
             let data = try Data(contentsOf: url)
@@ -101,8 +104,18 @@ class WorkoutDataStore {
         } catch {
             return (nil, error.localizedDescription)
         }
-        guard let workout = jsonResult as? WorkoutData else {
+        guard let jsonDoc = jsonResult as? Dictionary<String, Any> else {
             return (nil, "error cast json object to WorkoutData type")
+        }
+        guard let start = jsonDoc["start"] as? String else {
+            return (nil, "error cast json object to WorkoutData type")
+        }
+        guard let end = jsonDoc["end"] as? String else {
+            return (nil, "error cast json object to WorkoutData type")
+        }
+        let result = WorkoutInfo.parse(start: start, end: end)
+        guard let workout = result.info else {
+            return (nil, String(format: "error parse json object: %@", result.error))
         }
         return (workout, "")
     }
@@ -126,17 +139,28 @@ class WorkoutDataStore {
         return data.count != 0 ? sum / data.count : 0
     }
     
-    func saveWorkoutData(workoutId: Int, start: Date, end: Date) -> (success: Bool, error: String) {
+    func saveWorkoutInfo(workoutId: Int, workout: WorkoutInfo) -> (success: Bool, error: String) {
         guard let docDir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
             return (false, "error find application document directory")
         }
         
         let workoutDir = docDir.appendingPathComponent(String(workoutId))
+        let workoutInfoUrl = workoutDir.appendingPathComponent("info")
+        print("save to: ", workoutInfoUrl)
         
-        //workoutDir.appendingPathComponent("info")
-        
-        //let workout = WorkoutData(start: start, end: end)
-        // save to json
+        let jsonDoc: Dictionary<String, Any> = [
+            "start": workout.start,
+            "end": workout.end
+        ]
+
+        do {
+            let fileHandle = try FileHandle(forWritingTo: workoutInfoUrl)
+            let jsonData = try JSONSerialization.data(withJSONObject: jsonDoc)
+            fileHandle.write(jsonData)
+            try fileHandle.close()
+        } catch {
+            return (false, error.localizedDescription)
+        }
         
         return (true, "")
     }
@@ -163,4 +187,49 @@ struct WorkoutData {
     var end = Date()
     var avgHeartRate = 0
     var calories = 0
+}
+
+struct WorkoutInfo: Codable {
+    var start = String()
+    var end = String()
+    
+    init(start: Date, end: Date) {
+        let fmt = DateFormatter()
+        fmt.timeStyle = .medium
+        fmt.dateStyle = .medium
+        self.start = fmt.string(from: start)
+        self.end = fmt.string(from: end)
+    }
+    
+    init(start: String, end: String) {
+        self.start = start
+        self.end = end
+    }
+    
+    func startDate() -> Date {
+        let fmt = DateFormatter()
+        fmt.timeStyle = .medium
+        fmt.dateStyle = .medium
+        return fmt.date(from: self.start)!
+    }
+    
+    func endDate() -> Date {
+        let fmt = DateFormatter()
+        fmt.timeStyle = .medium
+        fmt.dateStyle = .medium
+        return fmt.date(from: self.end)!
+    }
+    
+    static func parse(start: String, end: String) -> (info: WorkoutInfo?, error: String) {
+        let fmt = DateFormatter()
+        fmt.timeStyle = .medium
+        fmt.dateStyle = .medium
+        if fmt.date(from: start) == nil {
+            return (nil, "error parse 'start' element")
+        }
+        if fmt.date(from: end) == nil {
+            return (nil, "error parse 'end' element")
+        }
+        return (WorkoutInfo(start: start, end: end), "")
+    }
 }

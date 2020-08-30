@@ -57,7 +57,7 @@ func dataToIntArr(data: Data) -> [Int] {
         else {
             break
         }
-        let num = Int(b1) << 56 | Int(b2) << 48 | Int(b3) << 40 | Int(b4) << 32 | Int(b5) << 24 | Int(b6) << 16 | Int(b7) << 8 | Int(b8)
+        let num = Int(b1) | Int(b2) << 8 | Int(b3) << 16 | Int(b4) << 24 | Int(b5) << 32 | Int(b6) << 40 | Int(b7) << 48 | Int(b8) << 56
         numbers.append(num)
     }
     return numbers

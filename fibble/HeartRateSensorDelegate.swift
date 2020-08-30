@@ -14,7 +14,7 @@ class HeartRateSensorDelegate: NSObject, CBPeripheralDelegate {
     let heartRateMeasurementCharacteristicCBUUID = CBUUID(string: "2A37")
     let bodySensorLocationCharacteristicCBUUID = CBUUID(string: "2A38")
     
-    var currentHeartRate: Int = 0
+    var currentHeartRate: Int = 160
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         guard let services = peripheral.services else { return }
