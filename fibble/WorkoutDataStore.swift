@@ -88,6 +88,7 @@ class WorkoutDataStore {
         }
         
         let workout = WorkoutData(
+            id: stats.lastWorkoutId,
             start: info.startDate(),
             end: info.endDate(),
             avgHeartRate: caclulateAvgHeartRate(data)
@@ -183,6 +184,7 @@ class WorkoutStore {
 }
 
 struct WorkoutData {
+    var id = 0
     var start = Date()
     var end = Date()
     var avgHeartRate = 0

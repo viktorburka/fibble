@@ -35,7 +35,7 @@ struct StartScreen: View {
                 }
                 VStack {
                     Divider()
-                    Text("Last Workout")
+                    Text("Last Workout - \(lastReport.workoutId)")
                         .font(.body)
                     List(self.lastReport.reportData) { data in
                         HStack {
@@ -56,6 +56,7 @@ struct StartScreen: View {
                 return
             }
             self.lastReport.reportData = WorkoutReport.buildReport(data: workout)
+            self.lastReport.workoutId = workout.id
             //updateLastWorkoutReport(self)
         }
     }
@@ -93,6 +94,7 @@ struct ReportData: Identifiable {
 
 class WorkoutReport: ObservableObject {
     @Published var reportData = [ReportData]()
+    @Published var workoutId = 0
     static let template = [
         ReportData(id: 0, label: "Workout Time", value: ""),
         ReportData(id: 1, label: "Duration", value: ""),

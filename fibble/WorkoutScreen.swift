@@ -60,6 +60,7 @@ struct WorkoutScreen: View {
                         let result = self.store.lastWorkoutData()
                         if let workout = result.data {
                             self.lastReport.reportData = WorkoutReport.buildReport(data: workout)
+                            self.lastReport.workoutId = self.workoutId
                         } else {
                             print("error load last workout data: ", result.error)
                             self.state = .error
