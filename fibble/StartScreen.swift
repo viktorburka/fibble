@@ -12,6 +12,7 @@ struct StartScreen: View {
     @State var screenState: StartScreenState = StartScreenState()
     @State var store = WorkoutDataStore()
     @ObservedObject var lastReport = WorkoutReport()
+    @ObservedObject var currentWorkout = CurrentWorkout()
     var body: some View {
         NavigationView {
             VStack {
@@ -19,17 +20,22 @@ struct StartScreen: View {
                     Text("\(screenState.errorText)")
                         .opacity(self.screenState.state == .ok ? 0.0 : 1.0)
                         .foregroundColor(.red)
-                    Spacer().frame(height: 20)
+                    Spacer()
+                        .frame(height: 20)
+                    Text("\(screenState.workouts[currentWorkout.id].name)")
+                    Spacer()
+                        .frame(height: 20)
                     Button(action: startWorkout) {
-                        NavigationLink(destination: WorkoutScreen(lastReport: self.lastReport)) {
+                        NavigationLink(destination: WorkoutScreen(lastReport: self.lastReport, currentWorkout: self.currentWorkout)) {
                             Text("Start Workout")
                         }
                     }
-                    Spacer().frame(height: 30)
-                    Button(action: startFtpTest) {
-                        //NavigationLink(destination: WorkoutScreen()) {
-                            Text("Start FTP Test")
-                        //}
+                    .contextMenu {
+                        ForEach(screenState.workouts) { w in
+                            Button(action: { self.currentWorkout.id = w.id }) {
+                                Text(w.name)
+                            }
+                        }
                     }
                     Spacer().frame(height: 80)
                 }
@@ -76,9 +82,20 @@ struct StartScreen_Previews: PreviewProvider {
     }
 }
 
+//enum WorkoutType: CaseIterable, Identifiable {
+//    case recovery
+//    case ftpTest
+//    var id: String { self.rawValue }
+//}
+
 struct StartScreenState {
     var state: ScreenState = .ok
     var errorText = "Unknown error"
+    var currentWorkout = 0
+    let workouts = [
+        Workout(id: 0, name: "Recovery"),
+        Workout(id: 1, name: "FTP Test")
+    ]
 }
 
 enum ScreenState {
@@ -138,4 +155,13 @@ class WorkoutReport: ObservableObject {
 
 func formatDuration(duration: TimeInterval) -> String {
     return String(format: "%02d:%02d:%02d", Int(duration) / 3600, Int(duration) / 60 % 60, Int(duration) % 60)
+}
+
+class CurrentWorkout: ObservableObject {
+    @Published var id = 0
+}
+
+struct Workout: Identifiable {
+    var id: Int
+    var name: String
 }

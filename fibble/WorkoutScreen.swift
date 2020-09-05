@@ -27,6 +27,7 @@ struct WorkoutScreen: View {
     @State var startTime = Date()
     @State var endTime = Date()
     @ObservedObject var lastReport: WorkoutReport
+    @ObservedObject var currentWorkout: CurrentWorkout
     var body: some View {
         VStack {
             Text(self.state == .ok ? "Workout \(workoutId)" : "Workout can't be recoreded")
@@ -118,6 +119,6 @@ struct WorkoutScreen: View {
 
 struct WorkoutScreen_Previews: PreviewProvider {
     static var previews: some View {
-        WorkoutScreen(lastReport: WorkoutReport())
+        WorkoutScreen(lastReport: WorkoutReport(), currentWorkout: CurrentWorkout())
     }
 }
