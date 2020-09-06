@@ -36,3 +36,10 @@ struct HeartRateZone: Hashable {
                lhs.end == rhs.end
     }
 }
+
+struct HeartRateZoneBuilder {
+    static func byNumber(number: Int) -> HeartRateZone {
+        let s = Settings()
+        return s.heartRateZones[number-1]
+    }
+}

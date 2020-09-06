@@ -12,7 +12,6 @@ struct StartScreen: View {
     @State var screenState: StartScreenState = StartScreenState()
     @State var store = WorkoutDataStore()
     @ObservedObject var lastReport = WorkoutReport()
-    @ObservedObject var currentWorkout = CurrentWorkout()
     var body: some View {
         NavigationView {
             VStack {
@@ -22,17 +21,20 @@ struct StartScreen: View {
                         .foregroundColor(.red)
                     Spacer()
                         .frame(height: 20)
-                    Text("\(screenState.workouts[currentWorkout.id].name)")
+                    Text("\(screenState.workouts[screenState.currentWorkout].name)")
                     Spacer()
                         .frame(height: 20)
                     Button(action: startWorkout) {
-                        NavigationLink(destination: WorkoutScreen(lastReport: self.lastReport, currentWorkout: self.currentWorkout)) {
+                        NavigationLink(destination: WorkoutScreen(
+                            lastReport: self.lastReport,
+                            workout: self.screenState.workouts[self.screenState.currentWorkout]))
+                        {
                             Text("Start Workout")
                         }
                     }
                     .contextMenu {
-                        ForEach(screenState.workouts) { w in
-                            Button(action: { self.currentWorkout.id = w.id }) {
+                        ForEach(screenState.workouts, id: \.id) { w in
+                            Button(action: { self.screenState.currentWorkout = w.id }) {
                                 Text(w.name)
                             }
                         }
@@ -92,9 +94,10 @@ struct StartScreenState {
     var state: ScreenState = .ok
     var errorText = "Unknown error"
     var currentWorkout = 0
-    let workouts = [
-        Workout(id: 0, name: "Recovery"),
-        Workout(id: 1, name: "FTP Test")
+    //var workouts = [Workout]()
+    var workouts: [Workout] = [
+        RecoveryWorkout(),
+        FtpTest()
     ]
 }
 
@@ -157,11 +160,4 @@ func formatDuration(duration: TimeInterval) -> String {
     return String(format: "%02d:%02d:%02d", Int(duration) / 3600, Int(duration) / 60 % 60, Int(duration) % 60)
 }
 
-class CurrentWorkout: ObservableObject {
-    @Published var id = 0
-}
 
-struct Workout: Identifiable {
-    var id: Int
-    var name: String
-}

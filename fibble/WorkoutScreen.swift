@@ -9,7 +9,7 @@
 import SwiftUI
 import CoreBluetooth
 
-let focusedFont = Font.system(size: 130).monospacedDigit()
+let focusedFont = Font.system(size: 100).monospacedDigit()
 
 struct WorkoutScreen: View {
     @State var store = WorkoutDataStore()
@@ -26,8 +26,11 @@ struct WorkoutScreen: View {
     @State var zones: [Zone] = []
     @State var startTime = Date()
     @State var endTime = Date()
+    @State var heartRateOutOfRange = false
     @ObservedObject var lastReport: WorkoutReport
-    @ObservedObject var currentWorkout: CurrentWorkout
+    var workout: Workout
+    var alerts = AlertManager(enabled: true)
+    var heartRateBlinker = Blinker()
     var body: some View {
         VStack {
             Text(self.state == .ok ? "Workout \(workoutId)" : "Workout can't be recoreded")
@@ -40,9 +43,15 @@ struct WorkoutScreen: View {
                     ForEach(zones) { z in
                         Text(String(format: "Z%d  %d-%d", z.number, z.start, z.end))
                             .opacity(z.highlighted ? 1 : 0)
+                            .foregroundColor(self.heartRateOutOfRange ? .red : .black)
                     }
                 }
                 .font(Font.system(size: 18).bold())
+                VStack {
+                    Image(systemName: "heart.slash")
+                        .opacity(self.heartRateBlinker.visible ? 1 : 0)
+                        .font(.system(size: 30, weight: .regular)).foregroundColor(.red)
+                }
             }
             Spacer()
             Text("Laps").font(.system(size: 60))
@@ -75,8 +84,8 @@ struct WorkoutScreen: View {
         }
         .navigationBarBackButtonHidden(true)
         .onAppear {
-            print("appear")
             let settings = Settings()
+            self.zones.removeAll()
             for hrz in settings.heartRateZones {
                 self.zones.append(Zone(number: hrz.number, start: hrz.start, end: hrz.end, highlighted: false))
             }
@@ -94,6 +103,13 @@ struct WorkoutScreen: View {
                     let data = withUnsafeBytes(of: self.heartRate) { Data($0) }
                     try? self.fileHandle!.write(contentsOf: data)
                 }
+                let interval = self.workout.currentInterval()
+                let eval = HeartRateEvaluator(heartRate: self.heartRate, zoneLow: interval.zone.start, zoneHigh: interval.zone.end, zoneNumber: interval.zone.number)
+                self.heartRateOutOfRange = eval.outOfRange
+                if self.heartRateOutOfRange {
+                    self.alerts.heartRateAlert()
+                }
+                self.heartRateBlinker.enabled = self.heartRateOutOfRange
             }
             
             self.centralManager = CBCentralManager(delegate: self.heartRateListener, queue: nil)
@@ -119,6 +135,10 @@ struct WorkoutScreen: View {
 
 struct WorkoutScreen_Previews: PreviewProvider {
     static var previews: some View {
-        WorkoutScreen(lastReport: WorkoutReport(), currentWorkout: CurrentWorkout())
+        WorkoutScreen(
+            lastReport: WorkoutReport(),
+            workout: RecoveryWorkout(),
+            alerts: AlertManager(enabled: false)
+        )
     }
 }
