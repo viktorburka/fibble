@@ -31,6 +31,7 @@ struct WorkoutScreen: View {
     var workout: Workout
     var alerts = AlertManager(enabled: true)
     var heartRateBlinker = Blinker()
+    var hyndrationBlinker = Blinker()
     var body: some View {
         VStack {
             Text(self.state == .ok ? "Workout \(workoutId)" : "Workout can't be recoreded")
@@ -47,10 +48,13 @@ struct WorkoutScreen: View {
                     }
                 }
                 .font(Font.system(size: 18).bold())
-                VStack {
+                VStack(spacing: 30) {
                     Image(systemName: "heart.slash")
                         .opacity(self.heartRateBlinker.visible ? 1 : 0)
                         .font(.system(size: 30, weight: .regular)).foregroundColor(.red)
+                    Image(systemName: "cloud.heavyrain")
+                        .opacity(self.hyndrationBlinker.visible ? 1 : 0)
+                        .font(.system(size: 30, weight: .regular)).foregroundColor(.blue)
                 }
             }
             Spacer()
@@ -103,13 +107,21 @@ struct WorkoutScreen: View {
                     let data = withUnsafeBytes(of: self.heartRate) { Data($0) }
                     try? self.fileHandle!.write(contentsOf: data)
                 }
+                
+                let reminder = HydrationReminder(formatter: TimeDurationFormatter(interval: self.timeInterval))
+                if reminder.hydrationDue {
+                    self.alerts.hydrationAlert()
+                }
+                self.hyndrationBlinker.enabled = reminder.hydrationDue
+                
                 let interval = self.workout.currentInterval()
                 let eval = HeartRateEvaluator(heartRate: self.heartRate, zoneLow: interval.zone.start, zoneHigh: interval.zone.end, zoneNumber: interval.zone.number)
                 self.heartRateOutOfRange = eval.outOfRange
-                if self.heartRateOutOfRange {
+                if self.heartRateOutOfRange && !reminder.hydrationDue {
                     self.alerts.heartRateAlert()
                 }
                 self.heartRateBlinker.enabled = self.heartRateOutOfRange
+                
             }
             
             self.centralManager = CBCentralManager(delegate: self.heartRateListener, queue: nil)
