@@ -58,11 +58,12 @@ struct WorkoutScreen: View {
                 }
             }
             Spacer()
-            //Text("Laps").font(.system(size: 60))
-            Text(workout.currentInterval().description)
-//            Spacer().frame(height: 10)
-            Text("Prepare to: \(workout.lastInterval() ? "" : workout.nextInterval().shortDescription) for \(workout.lastInterval() ? "" : TimeDurationFormatter(interval: workout.nextInterval().duration).prettyText)")
-                .opacity(!workout.lastInterval() && workout.intervalEnds(in: 5.0) ? 1 : 0)
+            VStack {
+                Text("\(workout.currentFragment().description) for \(TimeDurationFormatter(interval: workout.currentFragment().duration).prettyText)")
+                Spacer().frame(height: 20)
+                Text("Prepare to: \(workout.lastFragment() ? "workout end" : workout.nextFragment().shortDescription) for \(workout.lastFragment() ? "" : TimeDurationFormatter(interval: workout.nextFragment().duration).prettyText)")
+                    .opacity(!workout.lastFragment() && workout.currentFragment().ends(in: 5.0) ? 1 : 0)
+            }
             Spacer()
             Button(action: { self.showingAlert = true }) {
                 Text("End Workout").font(.system(size: 20))
@@ -72,17 +73,18 @@ struct WorkoutScreen: View {
                     title: Text("End this workout?"),
                     message: nil,
                     primaryButton: .destructive(Text("End Workout")) {
-                        self.endTime = Date()
-                        _ = self.store.saveWorkoutInfo(workoutId: self.workoutId, workout: WorkoutInfo(start: self.startTime, end: self.endTime))
-                        let result = self.store.lastWorkoutData()
-                        if let workout = result.data {
-                            self.lastReport.reportData = WorkoutReport.buildReport(data: workout)
-                            self.lastReport.workoutId = self.workoutId
-                        } else {
-                            print("error load last workout data: ", result.error)
-                            self.state = .error
-                        }
-                        self.presentationMode.wrappedValue.dismiss()
+                        self.endWorkout(screen: self)
+//                        self.endTime = Date()
+//                        _ = self.store.saveWorkoutInfo(workoutId: self.workoutId, workout: WorkoutInfo(start: self.startTime, end: self.endTime))
+//                        let result = self.store.lastWorkoutData()
+//                        if let workout = result.data {
+//                            self.lastReport.reportData = WorkoutReport.buildReport(data: workout)
+//                            self.lastReport.workoutId = self.workoutId
+//                        } else {
+//                            print("error load last workout data: ", result.error)
+//                            self.state = .error
+//                        }
+//                        self.presentationMode.wrappedValue.dismiss()
                     },
                     secondaryButton: .cancel()
                 )
@@ -101,19 +103,39 @@ struct WorkoutScreen: View {
             }
             self.timeInterval = 0
             self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+                
                 self.timeInterval += 1
-                self.workout.setElapsed(duration: self.timeInterval)
+                self.workout.update(duration: self.timeInterval)
+                
+                if self.workout.isOver() {
+                    self.endWorkout(screen: self)
+                    return
+                }
+                
+                // unmute all audio reminders
+                self.alerts.unmute()
+                
+                if self.workout.ends(in: 10.0) {
+                    self.alerts.workoutEndAlert()
+                    self.alerts.mute() // mute all reminders for the rest of this update
+                }
+                
                 self.heartRate = self.heartRateListener.getHeartRate()
                 for idx in 0...self.zones.count-1 {
                     self.zones[idx].updateHighlighting(heartRate: self.heartRate)
                 }
-                if self.fileHandle != nil {
-                    let data = withUnsafeBytes(of: self.heartRate) { Data($0) }
-                    try? self.fileHandle!.write(contentsOf: data)
+                
+                let currentFragment = self.workout.currentFragment()
+                
+                if currentFragment.recordHeartRate {
+                    self.saveHeartRate(heartRate: self.heartRate, to: self.fileHandle)
                 }
-                if self.workout.intervalEnds(in: 5.0) {
-                    self.alerts.intervalChangeAlert()
+                
+                if currentFragment.ends(in: 5.0) {
+                    self.alerts.intervalEndAlert()
+                    self.alerts.mute()
                 }
+
                 if self.workout.hydrationReminderEnabled {
                     let reminder = HydrationReminder(formatter: TimeDurationFormatter(interval: self.timeInterval))
                     if reminder.hydrationDue {
@@ -122,7 +144,7 @@ struct WorkoutScreen: View {
                     self.hyndrationBlinker.enabled = reminder.hydrationDue
                     
                     if self.workout.heartRateAlertEnabled {
-                        let interval = self.workout.currentInterval()
+                        let interval = self.workout.currentFragment()
                         let eval = HeartRateEvaluator(heartRate: self.heartRate, zoneLow: interval.zone.start, zoneHigh: interval.zone.end, zoneNumber: interval.zone.number)
                         self.heartRateOutOfRange = eval.outOfRange
                         if self.heartRateOutOfRange && !reminder.hydrationDue {
@@ -152,13 +174,42 @@ struct WorkoutScreen: View {
             try? self.fileHandle?.close()
         }
     }
+    
+    func saveHeartRate(heartRate: Int, to fileHandle: FileHandle?) {
+        let data = withUnsafeBytes(of: heartRate) { Data($0) }
+        try? self.fileHandle?.write(contentsOf: data)
+    }
+    
+    func endWorkout(screen: WorkoutScreen) {
+        screen.endTime = Date()
+        _ = screen.store.saveWorkoutInfo(workoutId: self.workoutId, workout: WorkoutInfo(start: screen.startTime, end: screen.endTime))
+        let result = screen.store.lastWorkoutData()
+        if let workout = result.data {
+            screen.lastReport.reportData = WorkoutReport.buildReport(data: workout)
+            screen.lastReport.workoutId = self.workoutId
+        } else {
+            print("error load last workout data: ", result.error)
+            screen.state = .error
+        }
+        screen.presentationMode.wrappedValue.dismiss()
+    }
 }
 
 struct WorkoutScreen_Previews: PreviewProvider {
     static var previews: some View {
         WorkoutScreen(
             lastReport: WorkoutReport(),
-            workout: Workout(id: 1, name: "Recovery", intervals: [Recovery()]),
+            workout: Workout(
+                id: 1,
+                name: "Recovery",
+                intervals: [
+                    Fragment(
+                        shortDescription: "Recovery",
+                        description: "Recovery",
+                        duration: infiniteDuration
+                    )
+                ]
+            ),
             alerts: AlertManager(enabled: false)
         )
     }

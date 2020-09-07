@@ -84,43 +84,91 @@ struct StartScreen_Previews: PreviewProvider {
     }
 }
 
-//enum WorkoutType: CaseIterable, Identifiable {
-//    case recovery
-//    case ftpTest
-//    var id: String { self.rawValue }
-//}
-
 struct StartScreenState {
     var state: ScreenState = .ok
     var errorText = "Unknown error"
     var currentWorkout = 0
+    
+#if targetEnvironment(simulator)
     var workouts: [Workout] = [
-        Workout(id: 0, name: "Recovery", intervals: [Recovery()]),
+        Workout(
+            id: 0,
+            name: "FTP Test",
+            intervals: [
+                Fragment(
+                    shortDescription: "Reach top speed",
+                    description: "Reach top speed",
+                    duration: 10.0
+                ),
+                Fragment(
+                    shortDescription: "Speed you can barely maintain",
+                    description: "High cadence, reach speed you can barely maintain",
+                    duration: 10.0
+                ),
+                Fragment(
+                    shortDescription: "Recovery",
+                    description: "Recovery",
+                    duration: 10.0
+                )
+            ],
+            hydrationReminderEnabled: false,
+            heartRateAlertEnabled: false
+        )
+    ]
+#else
+    var workouts: [Workout] = [
+        Workout(
+            id: 0,
+            name: "Recovery",
+            intervals: [
+                Fragment(
+                    shortDescription: "Recovery",
+                    description: "Recovery",
+                    duration: infiniteDuration
+                )
+            ]
+        ),
         Workout(
             id: 1,
             name: "FTP Test",
             intervals: [
-                Instructed(
+                Fragment(
                     shortDescription: "Reach top speed",
-                    description: "Reach top speed in 60 sec.",
+                    description: "Reach top speed",
                     duration: 60.0
                 ),
-                Instructed(
+                Fragment(
                     shortDescription: "Speed you can barely maintain",
-                    description: "High cadence, reach speed you can barely maintain for 6 min.",
+                    description: "High cadence, reach speed you can barely maintain",
                     duration: 6 * 60.0
                 ),
-                Instructed(
+                Fragment(
                     shortDescription: "Top speed",
-                    description: "Top speed for 1 min.",
+                    description: "Top speed",
                     duration: 60.0
+                ),
+                Fragment(
+                    shortDescription: "Recovery",
+                    description: "Recovery",
+                    duration: 10 * 60.0
                 )
             ],
             hydrationReminderEnabled: false,
             heartRateAlertEnabled: false
         ),
-        Workout(id: 2, name: "Endurance Miles", intervals: [EnduranceMiles()])
+        Workout(
+            id: 2,
+            name: "Endurance Miles",
+            intervals: [
+                Fragment(
+                    shortDescription: "Endurance Miles",
+                    description: "Endurance Miles",
+                    duration: infiniteDuration
+                )
+            ]
+        )
     ]
+#endif
 }
 
 enum ScreenState {

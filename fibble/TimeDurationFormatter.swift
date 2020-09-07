@@ -27,6 +27,9 @@ struct TimeDurationFormatter {
     }
     var prettyText: String {
         get {
+            if interval == infiniteDuration {
+                return "entire workout"
+            }
             var text = ""
             if hours > 0 {
                 text += "\(self.hours) hr. "

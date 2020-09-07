@@ -10,25 +10,77 @@ import Foundation
 import AudioToolbox
 
 class AlertManager {
+
+    enum Reminder: Int {
+        case heartRate = 0, hydration, intervalEnd, workoutEnd
+    }
+    
+    class TrackingInfo {
+        var steps: Int
+        var frequency: Int
+        init(frequency: Int) {
+            self.frequency = frequency
+            self.steps = frequency // to trigger on first call
+        }
+        func reset() { self.steps = 1 }
+        func inc() { self.steps = self.steps + 1 }
+    }
+    
+    let tracking = [
+        Reminder.heartRate:   TrackingInfo(frequency: 4),
+        Reminder.hydration:   TrackingInfo(frequency: 4),
+        Reminder.intervalEnd: TrackingInfo(frequency: 2),
+        Reminder.workoutEnd:  TrackingInfo(frequency: 2)
+    ]
+    
     var enabled = true
-    var play = 0
-    let frequency = 4 // play alert every Nth time
+    var muted = false
+    
     init(enabled: Bool) {
         self.enabled = enabled
     }
+    
+    func mute() { self.muted = true }
+    
+    func unmute() { self.muted = false }
+    
     func heartRateAlert() {
-        if play % frequency == 0 && enabled {
+        let t = tracking[Reminder.heartRate]!
+        if enabled && !muted && (t.steps % t.frequency == 0) {
             AudioServicesPlaySystemSound(SystemSoundID(1151))
+            t.reset()
+        } else {
+            t.inc()
         }
-        play += 1
     }
+    
     func hydrationAlert() {
-        if play % frequency == 0 && enabled {
+        let t = tracking[Reminder.hydration]!
+        if enabled && !muted && (t.steps % t.frequency == 0) {
             AudioServicesPlaySystemSound(SystemSoundID(1007))
+            t.reset()
+        } else {
+            t.inc()
         }
-        play += 1
     }
-    func intervalChangeAlert() {
-        AudioServicesPlaySystemSound(SystemSoundID(1007))
+    
+    func intervalEndAlert() {
+        let t = tracking[Reminder.intervalEnd]!
+        if enabled && !muted && (t.steps % t.frequency == 0) {
+            AudioServicesPlaySystemSound(SystemSoundID(1007))
+            t.reset()
+        } else {
+            t.inc()
+        }
+    }
+    
+    func workoutEndAlert() {
+        let t = tracking[Reminder.workoutEnd]!
+        if enabled && !muted && (t.steps % t.frequency == 0) {
+            AudioServicesPlaySystemSound(SystemSoundID(1007))
+            t.reset()
+        } else {
+            t.inc()
+        }
     }
 }

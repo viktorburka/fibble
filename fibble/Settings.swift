@@ -9,7 +9,7 @@
 import Foundation
 
 let infiniteHeartRate = 1000
-let entireWorkout = TimeInterval(24 * 60 * 60) // sec
+let infiniteDuration = TimeInterval(24 * 60 * 60) // sec
 
 struct Settings {
     enum HeartRateCalculationStrategy {
@@ -85,7 +85,7 @@ func zonesByFtpAvg(heartRate: Int) -> [HeartRateZone] {
     if heartRate <= 0 {
         return zones
     }
-    zones.append(HeartRateZone(number: 1, start: Int(0.5*Double(heartRate)), end: Int(0.91*Double(heartRate))))
+    zones.append(HeartRateZone(number: 1, start: Int(0.5*Double(heartRate)),  end: Int(0.91*Double(heartRate))))
     zones.append(HeartRateZone(number: 2, start: Int(0.88*Double(heartRate)), end: Int(0.9*Double(heartRate))))
     zones.append(HeartRateZone(number: 3, start: Int(0.92*Double(heartRate)), end: Int(0.94*Double(heartRate))))
     zones.append(HeartRateZone(number: 4, start: Int(0.95*Double(heartRate)), end: Int(0.97*Double(heartRate))))
