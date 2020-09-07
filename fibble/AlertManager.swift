@@ -28,4 +28,7 @@ class AlertManager {
         }
         play += 1
     }
+    func intervalChangeAlert() {
+        AudioServicesPlaySystemSound(SystemSoundID(1007))
+    }
 }

@@ -58,7 +58,11 @@ struct WorkoutScreen: View {
                 }
             }
             Spacer()
-            Text("Laps").font(.system(size: 60))
+            //Text("Laps").font(.system(size: 60))
+            Text(workout.currentInterval().description)
+//            Spacer().frame(height: 10)
+            Text("Prepare to: \(workout.lastInterval() ? "" : workout.nextInterval().shortDescription) for \(workout.lastInterval() ? "" : TimeDurationFormatter(interval: workout.nextInterval().duration).prettyText)")
+                .opacity(!workout.lastInterval() && workout.intervalEnds(in: 5.0) ? 1 : 0)
             Spacer()
             Button(action: { self.showingAlert = true }) {
                 Text("End Workout").font(.system(size: 20))
@@ -70,7 +74,6 @@ struct WorkoutScreen: View {
                     primaryButton: .destructive(Text("End Workout")) {
                         self.endTime = Date()
                         _ = self.store.saveWorkoutInfo(workoutId: self.workoutId, workout: WorkoutInfo(start: self.startTime, end: self.endTime))
-                        //self.lastReport.reportData = WorkoutReport.buildReport(data: WorkoutData())
                         let result = self.store.lastWorkoutData()
                         if let workout = result.data {
                             self.lastReport.reportData = WorkoutReport.buildReport(data: workout)
@@ -88,10 +91,10 @@ struct WorkoutScreen: View {
         }
         .navigationBarBackButtonHidden(true)
         .onAppear {
-            let settings = Settings()
             self.zones.removeAll()
-            for hrz in settings.heartRateZones {
-                self.zones.append(Zone(number: hrz.number, start: hrz.start, end: hrz.end, highlighted: false))
+            for hrz in 1...5 {
+                let z = HeartRateZoneBuilder.byNumber(number: hrz)
+                self.zones.append(Zone(number: z.number, start: z.start, end: z.end, highlighted: false))
             }
             if self.zones.count > 0 {
                 self.zones[0].highlighted = true
@@ -99,6 +102,7 @@ struct WorkoutScreen: View {
             self.timeInterval = 0
             self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
                 self.timeInterval += 1
+                self.workout.setElapsed(duration: self.timeInterval)
                 self.heartRate = self.heartRateListener.getHeartRate()
                 for idx in 0...self.zones.count-1 {
                     self.zones[idx].updateHighlighting(heartRate: self.heartRate)
@@ -107,21 +111,26 @@ struct WorkoutScreen: View {
                     let data = withUnsafeBytes(of: self.heartRate) { Data($0) }
                     try? self.fileHandle!.write(contentsOf: data)
                 }
-                
-                let reminder = HydrationReminder(formatter: TimeDurationFormatter(interval: self.timeInterval))
-                if reminder.hydrationDue {
-                    self.alerts.hydrationAlert()
+                if self.workout.intervalEnds(in: 5.0) {
+                    self.alerts.intervalChangeAlert()
                 }
-                self.hyndrationBlinker.enabled = reminder.hydrationDue
-                
-                let interval = self.workout.currentInterval()
-                let eval = HeartRateEvaluator(heartRate: self.heartRate, zoneLow: interval.zone.start, zoneHigh: interval.zone.end, zoneNumber: interval.zone.number)
-                self.heartRateOutOfRange = eval.outOfRange
-                if self.heartRateOutOfRange && !reminder.hydrationDue {
-                    self.alerts.heartRateAlert()
+                if self.workout.hydrationReminderEnabled {
+                    let reminder = HydrationReminder(formatter: TimeDurationFormatter(interval: self.timeInterval))
+                    if reminder.hydrationDue {
+                        self.alerts.hydrationAlert()
+                    }
+                    self.hyndrationBlinker.enabled = reminder.hydrationDue
+                    
+                    if self.workout.heartRateAlertEnabled {
+                        let interval = self.workout.currentInterval()
+                        let eval = HeartRateEvaluator(heartRate: self.heartRate, zoneLow: interval.zone.start, zoneHigh: interval.zone.end, zoneNumber: interval.zone.number)
+                        self.heartRateOutOfRange = eval.outOfRange
+                        if self.heartRateOutOfRange && !reminder.hydrationDue {
+                            self.alerts.heartRateAlert()
+                        }
+                        self.heartRateBlinker.enabled = self.heartRateOutOfRange
+                    }
                 }
-                self.heartRateBlinker.enabled = self.heartRateOutOfRange
-                
             }
             
             self.centralManager = CBCentralManager(delegate: self.heartRateListener, queue: nil)
@@ -149,7 +158,7 @@ struct WorkoutScreen_Previews: PreviewProvider {
     static var previews: some View {
         WorkoutScreen(
             lastReport: WorkoutReport(),
-            workout: RecoveryWorkout(),
+            workout: Workout(id: 1, name: "Recovery", intervals: [Recovery()]),
             alerts: AlertManager(enabled: false)
         )
     }

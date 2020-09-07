@@ -94,10 +94,32 @@ struct StartScreenState {
     var state: ScreenState = .ok
     var errorText = "Unknown error"
     var currentWorkout = 0
-    //var workouts = [Workout]()
     var workouts: [Workout] = [
-        RecoveryWorkout(),
-        FtpTest()
+        Workout(id: 0, name: "Recovery", intervals: [Recovery()]),
+        Workout(
+            id: 1,
+            name: "FTP Test",
+            intervals: [
+                Instructed(
+                    shortDescription: "Reach top speed",
+                    description: "Reach top speed in 60 sec.",
+                    duration: 60.0
+                ),
+                Instructed(
+                    shortDescription: "Speed you can barely maintain",
+                    description: "High cadence, reach speed you can barely maintain for 6 min.",
+                    duration: 6 * 60.0
+                ),
+                Instructed(
+                    shortDescription: "Top speed",
+                    description: "Top speed for 1 min.",
+                    duration: 60.0
+                )
+            ],
+            hydrationReminderEnabled: false,
+            heartRateAlertEnabled: false
+        ),
+        Workout(id: 2, name: "Endurance Miles", intervals: [EnduranceMiles()])
     ]
 }
 

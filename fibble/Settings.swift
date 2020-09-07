@@ -8,8 +8,16 @@
 
 import Foundation
 
+let infiniteHeartRate = 1000
+let entireWorkout = TimeInterval(24 * 60 * 60) // sec
+
 struct Settings {
-    var heartRateZones = [HeartRateZone]()
+    enum HeartRateCalculationStrategy {
+        case ftpTest, manual
+    }
+    var heartRateZones: [HeartRateZone]
+    var heartRateCalculation: HeartRateCalculationStrategy
+    var ftpTestAvgHeartRate: Int
     
     init() {
         heartRateZones = [
@@ -19,18 +27,36 @@ struct Settings {
             HeartRateZone(number: 4, start: 164, end: 174),
             HeartRateZone(number: 5, start: 175, end: 186)
         ]
+        heartRateCalculation = HeartRateCalculationStrategy.manual
+        ftpTestAvgHeartRate = -1
     }
 }
+
 
 struct HeartRateZone: Hashable {
     var number: Int
     var start, end: Int
+    var valid: Bool
+    
+    init() {
+        number = 0
+        start = 0
+        end = 0
+        valid = false
+    }
+    
+    init(number: Int, start: Int, end: Int) {
+        self.number = number
+        self.start = start
+        self.end = end
+        self.valid = start < end
+    }
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(number)
     }
     
-    static func == (lhs: HeartRateZone, rhs: HeartRateZone) -> Bool {
+    static func ==(lhs: HeartRateZone, rhs: HeartRateZone) -> Bool {
         return lhs.number == rhs.number &&
                lhs.start == rhs.start &&
                lhs.end == rhs.end
@@ -40,6 +66,29 @@ struct HeartRateZone: Hashable {
 struct HeartRateZoneBuilder {
     static func byNumber(number: Int) -> HeartRateZone {
         let s = Settings()
-        return s.heartRateZones[number-1]
+        if s.heartRateCalculation == .manual {
+            if s.heartRateZones.indices.contains(number-1) {
+                return s.heartRateZones[number-1]
+            }
+            return HeartRateZone()
+        }
+        let zones = zonesByFtpAvg(heartRate: s.ftpTestAvgHeartRate)
+        if zones.indices.contains(number-1) {
+            return zones[number-1]
+        }
+        return HeartRateZone()
     }
+}
+
+func zonesByFtpAvg(heartRate: Int) -> [HeartRateZone] {
+    var zones = [HeartRateZone]()
+    if heartRate <= 0 {
+        return zones
+    }
+    zones.append(HeartRateZone(number: 1, start: Int(0.5*Double(heartRate)), end: Int(0.91*Double(heartRate))))
+    zones.append(HeartRateZone(number: 2, start: Int(0.88*Double(heartRate)), end: Int(0.9*Double(heartRate))))
+    zones.append(HeartRateZone(number: 3, start: Int(0.92*Double(heartRate)), end: Int(0.94*Double(heartRate))))
+    zones.append(HeartRateZone(number: 4, start: Int(0.95*Double(heartRate)), end: Int(0.97*Double(heartRate))))
+    zones.append(HeartRateZone(number: 5, start: heartRate, end: infiniteHeartRate))
+    return zones
 }
