@@ -15,19 +15,22 @@ class Workout {
     var currentFragmentIndex = 0
     var hydrationReminderEnabled = true
     var heartRateAlertEnabled = true
+    var displayHeartRateZones = true
     
     private var elapsed = 0.0
     private var totalFragmentsDuration = 0.0
 
     init(id: Int, name: String, intervals: [Fragment],
          hydrationReminderEnabled: Bool = true,
-         heartRateAlertEnabled: Bool = true) {
+         heartRateAlertEnabled: Bool = true,
+         displayHeartRateZones: Bool = true) {
         
         self.id = id
         self.name = name
         self.fragments = intervals
         self.hydrationReminderEnabled = hydrationReminderEnabled
         self.heartRateAlertEnabled = heartRateAlertEnabled
+        self.displayHeartRateZones = displayHeartRateZones
         for fragment in fragments {
             self.totalFragmentsDuration += fragment.duration
         }
@@ -81,6 +84,7 @@ class Fragment {
     var duration: TimeInterval
     var elapsed: TimeInterval
     var recordHeartRate: Bool
+    
     init(shortDescription: String, description: String, recordHeartRate: Bool = true) {
         self.shortDescription = shortDescription
         self.description = description
@@ -88,13 +92,17 @@ class Fragment {
         self.elapsed = 0.0
         self.recordHeartRate = recordHeartRate
     }
-    init(shortDescription: String, description: String, duration: TimeInterval, recordHeartRate: Bool = true) {
-        self.shortDescription = shortDescription
-        self.description = description
+    
+    convenience init(shortDescription: String, description: String, duration: TimeInterval, recordHeartRate: Bool = true) {
+        self.init(shortDescription: shortDescription, description: description, recordHeartRate: recordHeartRate)
         self.duration = duration
-        self.elapsed = 0.0
-        self.recordHeartRate = recordHeartRate
     }
+    
+    convenience init(shortDescription: String, description: String, duration: TimeInterval, zone: HeartRateZone, recordHeartRate: Bool = true) {
+        self.init(shortDescription: shortDescription, description: description, duration: duration, recordHeartRate: recordHeartRate)
+        self.zone = zone
+    }
+    
     func ends(in timeLeft: TimeInterval) -> Bool {
         return duration - elapsed <= timeLeft
     }

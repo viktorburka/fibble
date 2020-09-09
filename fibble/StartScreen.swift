@@ -91,28 +91,42 @@ struct StartScreenState {
     
 #if targetEnvironment(simulator)
     var workouts: [Workout] = [
+//        Workout(
+//            id: 0,
+//            name: "FTP Test",
+//            intervals: [
+//                Fragment(
+//                    shortDescription: "Reach top speed",
+//                    description: "Reach top speed",
+//                    duration: 10.0
+//                ),
+//                Fragment(
+//                    shortDescription: "Speed you can barely maintain",
+//                    description: "High cadence, reach speed you can barely maintain",
+//                    duration: 10.0
+//                ),
+//                Fragment(
+//                    shortDescription: "Recovery",
+//                    description: "Recovery",
+//                    duration: 10.0
+//                )
+//            ],
+//            hydrationReminderEnabled: false,
+//            heartRateAlertEnabled: false,
+//            displayHeartRateZones: false
+//        )
         Workout(
             id: 0,
-            name: "FTP Test",
+            name: "Recovery",
             intervals: [
-                Fragment(
-                    shortDescription: "Reach top speed",
-                    description: "Reach top speed",
-                    duration: 10.0
-                ),
-                Fragment(
-                    shortDescription: "Speed you can barely maintain",
-                    description: "High cadence, reach speed you can barely maintain",
-                    duration: 10.0
-                ),
                 Fragment(
                     shortDescription: "Recovery",
                     description: "Recovery",
-                    duration: 10.0
+                    duration: infiniteDuration,
+                    zone: HeartRateZoneBuilder.byNumber(number: 1)
                 )
             ],
-            hydrationReminderEnabled: false,
-            heartRateAlertEnabled: false
+            hydrationReminderEnabled: false
         )
     ]
 #else
@@ -154,7 +168,8 @@ struct StartScreenState {
                 )
             ],
             hydrationReminderEnabled: false,
-            heartRateAlertEnabled: false
+            heartRateAlertEnabled: false,
+            displayHeartRateZones: false
         ),
         Workout(
             id: 2,
