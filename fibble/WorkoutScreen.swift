@@ -20,11 +20,11 @@ struct WorkoutScreen: View {
     @State var fileHandle: FileHandle?
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
 
-    @State var workoutState = WorkoutState()
+    @State var workoutState = WorkoutScreenState()
     @ObservedObject var lastReport: WorkoutReport
     
     @State var timer: Timer?
-    @State var showingAlert = false
+    //@State var showingAlert = false
     @State var state: ScreenState = .ok
     @State var zones: [Zone] = []
     @State var startTime = Date()
@@ -70,10 +70,10 @@ struct WorkoutScreen: View {
                     .opacity(!workout.lastFragment() && workout.currentFragment().ends(in: 5.0) ? 1 : 0)
             }.padding()
             Spacer()
-            Button(action: { self.showingAlert = true }) {
+            Button(action: { self.workoutState.showingAlert = true }) {
                 Text("End Workout").font(.system(size: 20))
             }
-            .alert(isPresented: $showingAlert) {
+            .alert(isPresented: $workoutState.showingAlert) {
                 Alert(
                     title: Text("End this workout?"),
                     message: nil,
@@ -89,7 +89,7 @@ struct WorkoutScreen: View {
 //                            print("error load last workout data: ", result.error)
 //                            self.state = .error
 //                        }
-//                        self.presentationMode.wrappedValue.dismiss()
+                        self.presentationMode.wrappedValue.dismiss()
                     },
                     secondaryButton: .cancel()
                 )
@@ -197,13 +197,13 @@ struct WorkoutScreen: View {
             print("error load last workout data: ", result.error)
             screen.state = .error
         }
-        screen.presentationMode.wrappedValue.dismiss()
     }
 }
 
-struct WorkoutState {
+struct WorkoutScreenState {
     var elapsedTime = TimeInterval()
     var heartRateOutOfRange = false
+    var showingAlert = false
 }
 
 struct WorkoutScreen_Previews: PreviewProvider {
