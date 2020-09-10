@@ -42,7 +42,8 @@ struct WorkoutScreen: View {
             ElapsedTimeView(elapsed: $workoutState.elapsedTime)
             Spacer()
             HStack {
-                Text("\(heartRate)").font(focusedFont)
+                Text("\(heartRate)")
+                    .font(focusedFont)
                 VStack(alignment: .leading) {
                     ForEach(zones) { z in
                         Text(String(format: "Z%d  %d-%d", z.number, z.start, z.end))
@@ -50,8 +51,8 @@ struct WorkoutScreen: View {
                             .foregroundColor(self.workoutState.heartRateOutOfRange ? .red : .black)
                     }
                 }
-                .font(Font.system(size: 18).bold())
-                .opacity(workout.displayHeartRateZones ? 1 : 0)
+                    .font(Font.system(size: 18).bold())
+                    .opacity(workout.displayHeartRateZones ? 1 : 0)
                 VStack(spacing: 30) {
                     Image(systemName: "heart.slash")
                         .opacity(self.heartRateBlinker.visible ? 1 : 0)
