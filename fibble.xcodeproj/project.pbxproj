@@ -31,6 +31,7 @@
 		F759391224F868AB006FB243 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F759391124F868AB006FB243 /* Settings.swift */; };
 		F759391424F869C3006FB243 /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F759391324F869C3006FB243 /* SettingsScreen.swift */; };
 		F759391624F8877C006FB243 /* StartScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F759391524F8877C006FB243 /* StartScreen.swift */; };
+		F7AB60C8250ABD6400D1D4DA /* HeartRateMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AB60C7250ABD6400D1D4DA /* HeartRateMonitor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +61,7 @@
 		F759391124F868AB006FB243 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		F759391324F869C3006FB243 /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
 		F759391524F8877C006FB243 /* StartScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartScreen.swift; sourceTree = "<group>"; };
+		F7AB60C7250ABD6400D1D4DA /* HeartRateMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateMonitor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +119,7 @@
 				F70B76B025048E5C0079A51E /* HydrationReminder.swift */,
 				F70B76B225048F540079A51E /* TimeDurationFormatter.swift */,
 				F70B76B82508718B0079A51E /* ElapsedTimeView.swift */,
+				F7AB60C7250ABD6400D1D4DA /* HeartRateMonitor.swift */,
 			);
 			path = fibble;
 			sourceTree = "<group>";
@@ -221,6 +224,7 @@
 				F7245CAA24F0BBD00047322D /* WorkoutScreen.swift in Sources */,
 				F70B76AF25048A8C0079A51E /* HeartRateEvaluator.swift in Sources */,
 				F740062B24F2EF9C00564CDF /* Tools.swift in Sources */,
+				F7AB60C8250ABD6400D1D4DA /* HeartRateMonitor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

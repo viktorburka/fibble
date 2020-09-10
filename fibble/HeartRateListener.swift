@@ -42,7 +42,6 @@ class HeartRateListener: NSObject, CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
                         advertisementData: [String: Any], rssi RSSI: NSNumber) {
         if peripheral.name == "TICKR CBA5" {
-            print("found!")
             print(peripheral)
             self.heartRateSensor = peripheral
             self.heartRateSensor.delegate = self.heartRateSensorDelegate
@@ -52,7 +51,6 @@ class HeartRateListener: NSObject, CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        print("Connected!")
         heartRateSensor.discoverServices([heartRateServiceCBUUID])
     }
 }

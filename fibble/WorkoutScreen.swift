@@ -7,48 +7,51 @@
 //
 
 import SwiftUI
-import CoreBluetooth
+//import CoreBluetooth
 
 let focusedFont = Font.system(size: 100).monospacedDigit()
 
 struct WorkoutScreen: View {
-    var dataStore = WorkoutDataStore()
-    var heartRateListener = HeartRateListener()
-    @State var centralManager: CBCentralManager? = nil
-    @State var workoutId: Int = 0
-    @State var heartRate: Int = 0
-    @State var fileHandle: FileHandle?
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-
-    @State var workoutState = WorkoutScreenState()
+    
+    @State var workoutId: Int = 0
+    @State var fileHandle: FileHandle?
+    
+    @State var screenState = WorkoutScreenState()
     @ObservedObject var lastReport: WorkoutReport
     
     @State var timer: Timer?
-    //@State var showingAlert = false
     @State var state: ScreenState = .ok
     @State var zones: [Zone] = []
     @State var startTime = Date()
     @State var endTime = Date()
     
-    var workout: Workout
+    #if targetEnvironment(simulator)
+        var monitor: HeartRateProvider = HeartRateSimulator()
+    #else
+        var monitor: HeartRateProvider = HeartRateMonitor()
+    #endif
+    
+    var dataStore = WorkoutDataStore()
     var alerts = AlertManager(enabled: true)
     var heartRateBlinker = Blinker()
     var hyndrationBlinker = Blinker()
+    var workout: Workout
     
     var body: some View {
         VStack {
             Text(self.state == .ok ? "Workout \(workoutId)" : "Workout can't be recoreded")
                 .foregroundColor(self.state == .ok ? .black : .red)
-            ElapsedTimeView(elapsed: $workoutState.elapsedTime)
+            ElapsedTimeView(elapsed: $screenState.elapsedTime)
             Spacer()
             HStack {
-                Text("\(heartRate)")
+                Text("\(screenState.heartRate)")
                     .font(focusedFont)
                 VStack(alignment: .leading) {
                     ForEach(zones) { z in
                         Text(String(format: "Z%d  %d-%d", z.number, z.start, z.end))
                             .opacity(z.highlighted ? 1 : 0)
-                            .foregroundColor(self.workoutState.heartRateOutOfRange ? .red : .black)
+                            .foregroundColor(self.screenState.heartRateOutOfRange ? .red : .black)
                     }
                 }
                     .font(Font.system(size: 18).bold())
@@ -70,10 +73,10 @@ struct WorkoutScreen: View {
                     .opacity(!workout.lastFragment() && workout.currentFragment().ends(in: 5.0) ? 1 : 0)
             }.padding()
             Spacer()
-            Button(action: { self.workoutState.showingAlert = true }) {
+            Button(action: { self.screenState.showingAlert = true }) {
                 Text("End Workout").font(.system(size: 20))
             }
-            .alert(isPresented: $workoutState.showingAlert) {
+            .alert(isPresented: $screenState.showingAlert) {
                 Alert(
                     title: Text("End this workout?"),
                     message: nil,
@@ -106,11 +109,11 @@ struct WorkoutScreen: View {
             if self.zones.count > 0 {
                 self.zones[0].highlighted = true
             }
-            self.workoutState.elapsedTime = 0
+            self.screenState.elapsedTime = 0
             self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
                 
-                self.workoutState.elapsedTime += 1
-                self.workout.update(duration: self.workoutState.elapsedTime)
+                self.screenState.elapsedTime += 1
+                self.workout.update(duration: self.screenState.elapsedTime)
                 
                 if self.workout.isOver() {
                     self.endWorkout(screen: self)
@@ -125,15 +128,15 @@ struct WorkoutScreen: View {
                     self.alerts.mute() // mute all reminders for the rest of this update
                 }
                 
-                self.heartRate = self.heartRateListener.getHeartRate()
+                self.screenState.heartRate = self.monitor.getHeartRate()
                 for idx in 0...self.zones.count-1 {
-                    self.zones[idx].updateHighlighting(heartRate: self.heartRate)
+                    self.zones[idx].updateHighlighting(heartRate: self.screenState.heartRate)
                 }
                 
                 let currentFragment = self.workout.currentFragment()
                 
                 if currentFragment.recordHeartRate {
-                    self.saveHeartRate(heartRate: self.heartRate, to: self.fileHandle)
+                    self.saveHeartRate(heartRate: self.screenState.heartRate, to: self.fileHandle)
                 }
                 
                 if currentFragment.ends(in: 5.0) {
@@ -142,7 +145,7 @@ struct WorkoutScreen: View {
                 }
 
                 if self.workout.hydrationReminderEnabled {
-                    let reminder = HydrationReminder(formatter: TimeDurationFormatter(interval: self.workoutState.elapsedTime))
+                    let reminder = HydrationReminder(formatter: TimeDurationFormatter(interval: self.screenState.elapsedTime))
                     if reminder.hydrationDue {
                         self.alerts.hydrationAlert()
                         self.alerts.mute()
@@ -152,16 +155,16 @@ struct WorkoutScreen: View {
                 
                 if self.workout.heartRateAlertEnabled {
                     let interval = self.workout.currentFragment()
-                    let eval = HeartRateEvaluator(heartRate: self.heartRate, zoneLow: interval.zone.start, zoneHigh: interval.zone.end, zoneNumber: interval.zone.number)
-                    self.workoutState.heartRateOutOfRange = eval.outOfRange
-                    if self.workoutState.heartRateOutOfRange {
+                    let eval = HeartRateEvaluator(heartRate: self.screenState.heartRate, zoneLow: interval.zone.start, zoneHigh: interval.zone.end, zoneNumber: interval.zone.number)
+                    self.screenState.heartRateOutOfRange = eval.outOfRange
+                    if self.screenState.heartRateOutOfRange {
                         self.alerts.heartRateAlert()
                     }
-                    self.heartRateBlinker.enabled = self.workoutState.heartRateOutOfRange
+                    self.heartRateBlinker.enabled = self.screenState.heartRateOutOfRange
                 }
             }
             
-            self.centralManager = CBCentralManager(delegate: self.heartRateListener, queue: nil)
+//            self.centralManager = CBCentralManager(delegate: self.heartRateListener, queue: nil)
             
             let stats = self.dataStore.loadWorkoutStats()
             if stats != nil {
@@ -204,12 +207,14 @@ struct WorkoutScreenState {
     var elapsedTime = TimeInterval()
     var heartRateOutOfRange = false
     var showingAlert = false
+    var heartRate = 0
 }
 
 struct WorkoutScreen_Previews: PreviewProvider {
     static var previews: some View {
         WorkoutScreen(
             lastReport: WorkoutReport(),
+            alerts: AlertManager(enabled: false),
             workout: Workout(
                 id: 1,
                 name: "Recovery",
@@ -220,8 +225,7 @@ struct WorkoutScreen_Previews: PreviewProvider {
                         duration: infiniteDuration
                     )
                 ]
-            ),
-            alerts: AlertManager(enabled: false)
+            )
         )
     }
 }
