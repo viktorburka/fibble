@@ -18,13 +18,12 @@ struct WorkoutScreen: View {
     @State var fileHandle: FileHandle?
     
     @State var screenState = WorkoutScreenState()
-    @ObservedObject var lastReport: WorkoutReport
+    @ObservedObject var workoutReport: WorkoutReport
     
     @State var timer: Timer?
     @State var state: ScreenState = .ok
     @State var zones: [Zone] = []
-    @State var startTime = Date()
-    @State var endTime = Date()
+    
     
     #if targetEnvironment(simulator)
         var monitor: HeartRateProvider = HeartRateSimulator()
@@ -175,7 +174,7 @@ struct WorkoutScreen: View {
                 }
                 self.state = workoutStore == nil ? .error : .ok
             }
-            self.startTime = Date()
+            self.workoutReport.startTime = Date()
         }
         .onDisappear {
             print("disappear")
@@ -190,12 +189,12 @@ struct WorkoutScreen: View {
     }
     
     func endWorkout(screen: WorkoutScreen) {
-        screen.endTime = Date()
-        _ = screen.dataStore.saveWorkoutInfo(workoutId: self.workoutId, workout: WorkoutInfo(start: screen.startTime, end: screen.endTime))
+        screen.workoutReport.endTime = Date()
+        _ = screen.dataStore.saveWorkoutInfo(workoutId: self.workoutId, workout: WorkoutInfo(start: screen.workoutReport.startTime, end: screen.workoutReport.endTime))
         let result = screen.dataStore.lastWorkoutData()
         if let workout = result.data {
-            screen.lastReport.reportData = WorkoutReport.buildReport(data: workout)
-            screen.lastReport.workoutId = self.workoutId
+            screen.workoutReport.reportData = WorkoutReport.buildReport(data: workout)
+            screen.workoutReport.workoutId = self.workoutId
         } else {
             print("error load last workout data: ", result.error)
             screen.state = .error
@@ -213,7 +212,7 @@ struct WorkoutScreenState {
 struct WorkoutScreen_Previews: PreviewProvider {
     static var previews: some View {
         WorkoutScreen(
-            lastReport: WorkoutReport(),
+            workoutReport: WorkoutReport(),
             alerts: AlertManager(enabled: false),
             workout: Workout(
                 id: 1,

@@ -26,7 +26,7 @@ struct StartScreen: View {
                         .frame(height: 20)
                     Button(action: startWorkout) {
                         NavigationLink(destination: WorkoutScreen(
-                            lastReport: self.lastReport,
+                            workoutReport: self.lastReport,
                             workout: self.screenState.workouts[self.screenState.currentWorkout]))
                         {
                             Text("Start Workout")
@@ -200,6 +200,8 @@ struct ReportData: Identifiable {
 class WorkoutReport: ObservableObject {
     @Published var reportData = [ReportData]()
     @Published var workoutId = 0
+    var startTime = Date()
+    var endTime = Date()
     static let template = [
         ReportData(id: 0, label: "Workout Time", value: ""),
         ReportData(id: 1, label: "Duration", value: ""),
