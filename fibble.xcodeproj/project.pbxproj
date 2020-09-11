@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F70B76A925045D660079A51E /* Workout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70B76A825045D660079A51E /* Workout.swift */; };
+		F70B76A925045D660079A51E /* WorkoutPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70B76A825045D660079A51E /* WorkoutPlan.swift */; };
 		F70B76AB250483490079A51E /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70B76AA250483490079A51E /* AlertManager.swift */; };
 		F70B76AD250488440079A51E /* Blinker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70B76AC250488440079A51E /* Blinker.swift */; };
 		F70B76AF25048A8C0079A51E /* HeartRateEvaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70B76AE25048A8C0079A51E /* HeartRateEvaluator.swift */; };
@@ -31,11 +31,12 @@
 		F759391224F868AB006FB243 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F759391124F868AB006FB243 /* Settings.swift */; };
 		F759391424F869C3006FB243 /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F759391324F869C3006FB243 /* SettingsScreen.swift */; };
 		F759391624F8877C006FB243 /* StartScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F759391524F8877C006FB243 /* StartScreen.swift */; };
+		F79DEBBF250ADD870004C946 /* HeartRateZonesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79DEBBE250ADD870004C946 /* HeartRateZonesView.swift */; };
 		F7AB60C8250ABD6400D1D4DA /* HeartRateMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AB60C7250ABD6400D1D4DA /* HeartRateMonitor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		F70B76A825045D660079A51E /* Workout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Workout.swift; sourceTree = "<group>"; };
+		F70B76A825045D660079A51E /* WorkoutPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutPlan.swift; sourceTree = "<group>"; };
 		F70B76AA250483490079A51E /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		F70B76AC250488440079A51E /* Blinker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Blinker.swift; sourceTree = "<group>"; };
 		F70B76AE25048A8C0079A51E /* HeartRateEvaluator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateEvaluator.swift; sourceTree = "<group>"; };
@@ -61,6 +62,7 @@
 		F759391124F868AB006FB243 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		F759391324F869C3006FB243 /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
 		F759391524F8877C006FB243 /* StartScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartScreen.swift; sourceTree = "<group>"; };
+		F79DEBBE250ADD870004C946 /* HeartRateZonesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateZonesView.swift; sourceTree = "<group>"; };
 		F7AB60C7250ABD6400D1D4DA /* HeartRateMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateMonitor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -112,7 +114,7 @@
 				F759391124F868AB006FB243 /* Settings.swift */,
 				F759391324F869C3006FB243 /* SettingsScreen.swift */,
 				F759391524F8877C006FB243 /* StartScreen.swift */,
-				F70B76A825045D660079A51E /* Workout.swift */,
+				F70B76A825045D660079A51E /* WorkoutPlan.swift */,
 				F70B76AA250483490079A51E /* AlertManager.swift */,
 				F70B76AC250488440079A51E /* Blinker.swift */,
 				F70B76AE25048A8C0079A51E /* HeartRateEvaluator.swift */,
@@ -120,6 +122,7 @@
 				F70B76B225048F540079A51E /* TimeDurationFormatter.swift */,
 				F70B76B82508718B0079A51E /* ElapsedTimeView.swift */,
 				F7AB60C7250ABD6400D1D4DA /* HeartRateMonitor.swift */,
+				F79DEBBE250ADD870004C946 /* HeartRateZonesView.swift */,
 			);
 			path = fibble;
 			sourceTree = "<group>";
@@ -215,10 +218,11 @@
 				F759391224F868AB006FB243 /* Settings.swift in Sources */,
 				F759391424F869C3006FB243 /* SettingsScreen.swift in Sources */,
 				F70B76B325048F540079A51E /* TimeDurationFormatter.swift in Sources */,
-				F70B76A925045D660079A51E /* Workout.swift in Sources */,
+				F70B76A925045D660079A51E /* WorkoutPlan.swift in Sources */,
 				F7245C9024ECBF620047322D /* SceneDelegate.swift in Sources */,
 				F7245CA424F090180047322D /* HeartRateSensorDelegate.swift in Sources */,
 				F70B76B92508718B0079A51E /* ElapsedTimeView.swift in Sources */,
+				F79DEBBF250ADD870004C946 /* HeartRateZonesView.swift in Sources */,
 				F759391624F8877C006FB243 /* StartScreen.swift in Sources */,
 				F7245C9224ECBF620047322D /* ContentView.swift in Sources */,
 				F7245CAA24F0BBD00047322D /* WorkoutScreen.swift in Sources */,

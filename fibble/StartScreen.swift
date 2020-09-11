@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct StartScreen: View {
-    @State var screenState: StartScreenState = StartScreenState()
+    @State var screenState = StartScreenState()
     @State var store = WorkoutDataStore()
     @ObservedObject var lastReport = WorkoutReport()
     var body: some View {
@@ -90,7 +90,7 @@ struct StartScreenState {
     var currentWorkout = 0
     
 #if targetEnvironment(simulator)
-    var workouts: [Workout] = [
+    var workouts: [WorkoutPlan] = [
 //        Workout(
 //            id: 0,
 //            name: "FTP Test",
@@ -115,7 +115,7 @@ struct StartScreenState {
 //            heartRateAlertEnabled: false,
 //            displayHeartRateZones: false
 //        )
-        Workout(
+        WorkoutPlan(
             id: 0,
             name: "Recovery",
             intervals: [

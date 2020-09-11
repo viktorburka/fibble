@@ -7,23 +7,19 @@
 //
 
 import SwiftUI
-//import CoreBluetooth
 
 let focusedFont = Font.system(size: 100).monospacedDigit()
 
 struct WorkoutScreen: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @ObservedObject var workoutReport: WorkoutReport
+    @State var screenState = WorkoutScreenState()
     
     @State var workoutId: Int = 0
     @State var fileHandle: FileHandle?
     
-    @State var screenState = WorkoutScreenState()
-    @ObservedObject var workoutReport: WorkoutReport
-    
     @State var timer: Timer?
     @State var state: ScreenState = .ok
-    @State var zones: [Zone] = []
-    
     
     #if targetEnvironment(simulator)
         var monitor: HeartRateProvider = HeartRateSimulator()
@@ -35,7 +31,7 @@ struct WorkoutScreen: View {
     var alerts = AlertManager(enabled: true)
     var heartRateBlinker = Blinker()
     var hyndrationBlinker = Blinker()
-    var workout: Workout
+    var workout: WorkoutPlan
     
     var body: some View {
         VStack {
@@ -46,15 +42,14 @@ struct WorkoutScreen: View {
             HStack {
                 Text("\(screenState.heartRate)")
                     .font(focusedFont)
-                VStack(alignment: .leading) {
-                    ForEach(zones) { z in
-                        Text(String(format: "Z%d  %d-%d", z.number, z.start, z.end))
-                            .opacity(z.highlighted ? 1 : 0)
-                            .foregroundColor(self.screenState.heartRateOutOfRange ? .red : .black)
-                    }
+                if validHeartRateZones(zones: HeartRateZoneBuilder.allZones()) && workout.displayHeartRateZones {
+                    HeartRateZonesView(zones: HeartRateZoneBuilder.allZones()!,
+                        heartRate: $screenState.heartRate,
+                        heartRateOutOfRange: $screenState.heartRateOutOfRange)
+                } else {
+                    Image(systemName: "heart.slash")
+                        .font(.system(size: 70, weight: .regular)).foregroundColor(.gray)
                 }
-                    .font(Font.system(size: 18).bold())
-                    .opacity(workout.displayHeartRateZones ? 1 : 0)
                 VStack(spacing: 30) {
                     Image(systemName: "heart.slash")
                         .opacity(self.heartRateBlinker.visible ? 1 : 0)
@@ -81,16 +76,6 @@ struct WorkoutScreen: View {
                     message: nil,
                     primaryButton: .destructive(Text("End Workout")) {
                         self.endWorkout(screen: self)
-//                        self.endTime = Date()
-//                        _ = self.store.saveWorkoutInfo(workoutId: self.workoutId, workout: WorkoutInfo(start: self.startTime, end: self.endTime))
-//                        let result = self.store.lastWorkoutData()
-//                        if let workout = result.data {
-//                            self.lastReport.reportData = WorkoutReport.buildReport(data: workout)
-//                            self.lastReport.workoutId = self.workoutId
-//                        } else {
-//                            print("error load last workout data: ", result.error)
-//                            self.state = .error
-//                        }
                         self.presentationMode.wrappedValue.dismiss()
                     },
                     secondaryButton: .cancel()
@@ -100,14 +85,6 @@ struct WorkoutScreen: View {
         }
         .navigationBarBackButtonHidden(true)
         .onAppear {
-            self.zones.removeAll()
-            for hrz in 1...5 {
-                let z = HeartRateZoneBuilder.byNumber(number: hrz)
-                self.zones.append(Zone(number: z.number, start: z.start, end: z.end, highlighted: false))
-            }
-            if self.zones.count > 0 {
-                self.zones[0].highlighted = true
-            }
             self.screenState.elapsedTime = 0
             self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
                 
@@ -128,9 +105,6 @@ struct WorkoutScreen: View {
                 }
                 
                 self.screenState.heartRate = self.monitor.getHeartRate()
-                for idx in 0...self.zones.count-1 {
-                    self.zones[idx].updateHighlighting(heartRate: self.screenState.heartRate)
-                }
                 
                 let currentFragment = self.workout.currentFragment()
                 
@@ -163,8 +137,6 @@ struct WorkoutScreen: View {
                 }
             }
             
-//            self.centralManager = CBCentralManager(delegate: self.heartRateListener, queue: nil)
-            
             let stats = self.dataStore.loadWorkoutStats()
             if stats != nil {
                 self.workoutId = stats!.lastWorkoutId + 1
@@ -177,10 +149,16 @@ struct WorkoutScreen: View {
             self.workoutReport.startTime = Date()
         }
         .onDisappear {
-            print("disappear")
             self.timer!.invalidate()
             try? self.fileHandle?.close()
         }
+    }
+    
+    func validHeartRateZones(zones: [HeartRateZone]?) -> Bool {
+        if let _ = zones {
+            return true
+        }
+        return false
     }
     
     func saveHeartRate(heartRate: Int, to fileHandle: FileHandle?) {
@@ -206,7 +184,7 @@ struct WorkoutScreenState {
     var elapsedTime = TimeInterval()
     var heartRateOutOfRange = false
     var showingAlert = false
-    var heartRate = 0
+    var heartRate: Int = 0
 }
 
 struct WorkoutScreen_Previews: PreviewProvider {
@@ -214,8 +192,8 @@ struct WorkoutScreen_Previews: PreviewProvider {
         WorkoutScreen(
             workoutReport: WorkoutReport(),
             alerts: AlertManager(enabled: false),
-            workout: Workout(
-                id: 1,
+            workout: WorkoutPlan(
+                id: 0,
                 name: "Recovery",
                 intervals: [
                     Fragment(

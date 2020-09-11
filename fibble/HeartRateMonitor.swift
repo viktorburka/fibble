@@ -28,7 +28,8 @@ class HeartRateMonitor: HeartRateProvider {
 }
 
 class HeartRateSimulator: HeartRateProvider {
-    var values = [80, 82, 85, 88, 90, 91, 92, 95, 97, 99, 100, 105, 106, 108, 111, 115, 118, 121, 125]
+    //var values = [80, 82, 85, 88, 90, 91, 92, 95, 97, 99, 100, 105, 106, 108, 111, 115, 118, 121, 125]
+    var values = [80, 130, 140, 141, 142, 143]
     var nextValue = 0
     func getHeartRate() -> Int {
         let currentHeartRate = values[nextValue]

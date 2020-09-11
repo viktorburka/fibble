@@ -78,6 +78,14 @@ struct HeartRateZoneBuilder {
         }
         return HeartRateZone()
     }
+    
+    static func allZones() -> [HeartRateZone]? {
+        let s = Settings()
+        if s.heartRateCalculation == .manual {
+            return s.heartRateZones
+        }
+        return zonesByFtpAvg(heartRate: s.ftpTestAvgHeartRate)
+    }
 }
 
 func zonesByFtpAvg(heartRate: Int) -> [HeartRateZone] {

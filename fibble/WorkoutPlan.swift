@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Workout {
+class WorkoutPlan {
     var id: Int
     var name: String
     var fragments: [Fragment]
