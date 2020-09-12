@@ -96,13 +96,13 @@
 		F7245C8C24ECBF620047322D /* fibble */ = {
 			isa = PBXGroup;
 			children = (
+				F7245C9524ECBF640047322D /* Preview Content */,
+				F7245C9324ECBF640047322D /* Assets.xcassets */,
+				F7245C9B24ECBF640047322D /* Info.plist */,
+				F7245C9824ECBF640047322D /* LaunchScreen.storyboard */,
 				F7245C8D24ECBF620047322D /* AppDelegate.swift */,
 				F7245C8F24ECBF620047322D /* SceneDelegate.swift */,
 				F7245C9124ECBF620047322D /* ContentView.swift */,
-				F7245C9324ECBF640047322D /* Assets.xcassets */,
-				F7245C9824ECBF640047322D /* LaunchScreen.storyboard */,
-				F7245C9B24ECBF640047322D /* Info.plist */,
-				F7245C9524ECBF640047322D /* Preview Content */,
 				F7245CA124EEE5000047322D /* HeartRateListener.swift */,
 				F7245CA324F090180047322D /* HeartRateSensorDelegate.swift */,
 				F7245CA924F0BBD00047322D /* WorkoutScreen.swift */,

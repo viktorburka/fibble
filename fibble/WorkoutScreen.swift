@@ -20,13 +20,8 @@ struct WorkoutScreen: View {
     
     @State var timer: Timer?
     @State var state: ScreenState = .ok
-    
-    #if targetEnvironment(simulator)
-        var monitor: HeartRateProvider = HeartRateSimulator()
-    #else
-        var monitor: HeartRateProvider = HeartRateMonitor()
-    #endif
-    
+        
+    var monitor: HeartRateProvider = createHeartRateMonitor()
     var dataStore = WorkoutDataStore()
     var alerts = AlertManager(enabled: true)
     var heartRateBlinker = Blinker()
@@ -178,6 +173,14 @@ struct WorkoutScreen: View {
             screen.state = .error
         }
     }
+}
+
+func createHeartRateMonitor() -> HeartRateProvider {
+    #if targetEnvironment(simulator)
+        return HeartRateSimulator()
+    #else
+        HeartRateMonitor()
+    #endif
 }
 
 struct WorkoutScreenState {
