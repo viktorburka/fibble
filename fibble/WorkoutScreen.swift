@@ -176,11 +176,11 @@ struct WorkoutScreen: View {
 }
 
 func createHeartRateMonitor() -> HeartRateProvider {
-    #if targetEnvironment(simulator)
-        return HeartRateSimulator()
-    #else
-        HeartRateMonitor()
-    #endif
+#if targetEnvironment(simulator)
+    return HeartRateSimulator()
+#else
+    HeartRateMonitor()
+#endif
 }
 
 struct WorkoutScreenState {
