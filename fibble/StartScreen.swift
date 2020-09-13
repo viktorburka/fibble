@@ -130,8 +130,8 @@ struct StartScreenState {
         )
     ]
 #else
-    var workouts: [Workout] = [
-        Workout(
+    var workouts: [WorkoutPlan] = [
+        WorkoutPlan(
             id: 0,
             name: "Recovery",
             intervals: [
@@ -142,7 +142,7 @@ struct StartScreenState {
                 )
             ]
         ),
-        Workout(
+        WorkoutPlan(
             id: 1,
             name: "FTP Test",
             intervals: [
@@ -171,7 +171,7 @@ struct StartScreenState {
             heartRateAlertEnabled: false,
             displayHeartRateZones: false
         ),
-        Workout(
+        WorkoutPlan(
             id: 2,
             name: "Endurance Miles",
             intervals: [

@@ -179,7 +179,7 @@ func createHeartRateMonitor() -> HeartRateProvider {
 #if targetEnvironment(simulator)
     return HeartRateSimulator()
 #else
-    HeartRateMonitor()
+    return HeartRateMonitor()
 #endif
 }
 
