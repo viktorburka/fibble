@@ -9,9 +9,9 @@
 import Foundation
 
 class WorkoutPlan {
-    var id: Int
-    var name: String
-    var fragments: [Fragment]
+    var id = 0
+    var name = ""
+    var fragments = [Fragment]()
     var currentFragmentIndex = 0
     var hydrationReminderEnabled = true
     var heartRateAlertEnabled = true
@@ -34,6 +34,10 @@ class WorkoutPlan {
         for fragment in fragments {
             self.totalFragmentsDuration += fragment.duration
         }
+    }
+    
+    init() {
+        fragments = [Fragment(shortDescription: "", description: "")]
     }
     
     func currentFragment() -> Fragment {

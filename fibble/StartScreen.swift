@@ -10,7 +10,6 @@ import SwiftUI
 
 struct StartScreen: View {
     @State var screenState = StartScreenState()
-    @State var store = WorkoutDataStore()
     @ObservedObject var lastReport = WorkoutReport()
     var body: some View {
         NavigationView {
@@ -27,7 +26,7 @@ struct StartScreen: View {
                     Button(action: startWorkout) {
                         NavigationLink(destination: WorkoutScreen(
                             workoutReport: self.lastReport,
-                            workout: self.screenState.workouts[self.screenState.currentWorkout]))
+                            workoutPlan: self.screenState.workouts[self.screenState.currentWorkout]))
                         {
                             Text("Start Workout")
                         }
@@ -56,16 +55,16 @@ struct StartScreen: View {
             }
         }
         .onAppear {
-            let result = self.store.lastWorkoutData()
-            guard let workout = result.data else {
-                print("error load last workout data:", result.error)
+            let store = LocalFileStore()
+            do {
+                let lastWorkoutId = try store.loadWorkoutStats().lastWorkoutId
+                let workout = try store.workoutData(workoutId: lastWorkoutId)
+                self.lastReport.reportData = WorkoutReport.buildReport(data: workout)
+                self.lastReport.workoutId = workout.id
+            } catch {
                 self.screenState.state = .error
                 self.screenState.errorText = "Error load last workout data"
-                return
             }
-            self.lastReport.reportData = WorkoutReport.buildReport(data: workout)
-            self.lastReport.workoutId = workout.id
-            //updateLastWorkoutReport(self)
         }
     }
     
@@ -202,6 +201,7 @@ class WorkoutReport: ObservableObject {
     @Published var workoutId = 0
     var startTime = Date()
     var endTime = Date()
+    var hasError = false
     static let template = [
         ReportData(id: 0, label: "Workout Time", value: ""),
         ReportData(id: 1, label: "Duration", value: ""),

@@ -8,26 +8,142 @@
 
 import Foundation
 
-class WorkoutDataStore {
-    let fileManager: FileManager
+protocol WorkoutDataStore {
+    func startWorkout() throws -> Int
+    func saveHeartRate(heartRate: Int) throws
+    func saveWorkoutInfo(info: WorkoutInfo) throws
+    func finishWorkout() throws
+    func workoutData(workoutId: Int) throws -> WorkoutData
+    func loadWorkoutStats() throws -> WorkoutStats
+}
+
+enum WorkoutStoreError: Error {
+    case activeWorkoutExists
+    case documentDirAccessIssue
+    case ioError
+    case noWorkoutFound
+    case jsonError
+    case dataError
+}
+
+class LocalFileStore: WorkoutDataStore {
+    let fileManager = FileManager.default
+    var dataFileHandle: FileHandle? = nil
+    var infoFileHandle: FileHandle? = nil
     
-    init(fileManager: FileManager = .default) {
-        self.fileManager = fileManager
+    func startWorkout() throws -> Int {
+        if dataFileHandle != nil {
+            throw WorkoutStoreError.activeWorkoutExists
+        }
+        
+        guard let rootUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            throw WorkoutStoreError.documentDirAccessIssue
+        }
+        
+        let workoutStats = try loadWorkoutStats()
+        let nextWorkoutId = workoutStats.lastWorkoutId+1
+        let nextWorkoutDir = rootUrl.appendingPathComponent(String(nextWorkoutId))
+        let workoutDataFilePath = nextWorkoutDir.appendingPathComponent("data")
+        let workoutInfoFilePath = nextWorkoutDir.appendingPathComponent("info")
+        
+        do {
+            try fileManager.createDirectory(at: nextWorkoutDir, withIntermediateDirectories: false, attributes: nil)
+        } catch {
+            print("i/o error: \(error)")
+            throw WorkoutStoreError.ioError
+        }
+        
+        // create heart rate data file
+        if !fileManager.createFile(atPath: workoutDataFilePath.path, contents: nil, attributes: nil) {
+            print("can't create file \(workoutDataFilePath.lastPathComponent)")
+            throw WorkoutStoreError.ioError
+        }
+        
+        // create workout info file
+        if !fileManager.createFile(atPath: workoutInfoFilePath.path, contents: nil, attributes: nil) {
+            print("can't create file \(workoutInfoFilePath.lastPathComponent)")
+            throw WorkoutStoreError.ioError
+        }
+        
+        dataFileHandle = try FileHandle(forWritingTo: workoutDataFilePath)
+        infoFileHandle = try FileHandle(forWritingTo: workoutInfoFilePath)
+        
+        return nextWorkoutId
     }
     
-    func loadWorkoutStats() -> WorkoutStats? {
-        guard let url = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            return nil
+    func saveHeartRate(heartRate: Int) throws {
+        guard let file = dataFileHandle else {
+            throw WorkoutStoreError.noWorkoutFound
+        }
+        let data = withUnsafeBytes(of: heartRate) { Data($0) }
+        try file.write(contentsOf: data)
+    }
+    
+    func saveWorkoutInfo(info: WorkoutInfo) throws {
+        guard let file = infoFileHandle else {
+            throw WorkoutStoreError.noWorkoutFound
         }
         
-        let workouts = try? fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: nil)
-        if workouts == nil {
-            return nil
+        let jsonDoc: Dictionary<String, Any> = [
+            "start": info.start,
+            "end": info.end
+        ]
+
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: jsonDoc)
+            file.write(jsonData)
+            try file.close()
+        } catch {
+            throw WorkoutStoreError.ioError
         }
+    }
+    
+    func workoutData(workoutId: Int) throws -> WorkoutData {
+        guard let docDir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            throw WorkoutStoreError.documentDirAccessIssue
+        }
+        
+        let workoutDir = docDir.appendingPathComponent(String(workoutId))
+        let info = try loadWorkoutInfo(workoutDir.appendingPathComponent("info"))
+        
+        guard let data = try loadWorkoutData(workoutDir.appendingPathComponent("data")) else {
+            throw WorkoutStoreError.dataError
+        }
+        
+        let workout = WorkoutData(
+            id: workoutId,
+            start: info.startDate(),
+            end: info.endDate(),
+            avgHeartRate: caclulateAvgHeartRate(data)
+        )
+        
+        return workout
+    }
+    
+    func finishWorkout() throws {
+        guard let dataFile = dataFileHandle else {
+            throw WorkoutStoreError.ioError
+        }
+        guard let infoFile = infoFileHandle else {
+            throw WorkoutStoreError.ioError
+        }
+        
+        try dataFile.close()
+        dataFileHandle = nil
+        
+        try infoFile.close()
+        infoFileHandle = nil
+    }
+    
+    func loadWorkoutStats() throws -> WorkoutStats {
+        guard let url = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            throw WorkoutStoreError.documentDirAccessIssue
+        }
+        
+        let workouts = try fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: nil)
         
         var lastIdx = 0
-        
-        for workout in workouts! {
+        for workout in workouts {
             let id = Int(workout.lastPathComponent) ?? 0
             if id > lastIdx {
                 lastIdx = id
@@ -37,133 +153,41 @@ class WorkoutDataStore {
         return WorkoutStats(lastWorkoutId: lastIdx)
     }
     
-    func createWorkoutSession(workoutId: Int) -> WorkoutStore? {
-        guard let rootUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            return nil
-        }
-        
-        let nextWorkoutDir = rootUrl.appendingPathComponent(String(workoutId))
-        let workoutDataFilePath = nextWorkoutDir.appendingPathComponent("data")
-        let workoutInfoFilePath = nextWorkoutDir.appendingPathComponent("info")
-        
-        do {
-            try fileManager.createDirectory(at: nextWorkoutDir, withIntermediateDirectories: false, attributes: nil)
-        } catch {
-            print("error create workout \(workoutId) directory: \(error)")
-            return nil
-        }
-        
-        if !fileManager.createFile(atPath: workoutDataFilePath.path, contents: nil, attributes: nil) {
-            print("can't create file \(workoutDataFilePath.lastPathComponent)")
-            return nil
-        }
-        
-        if !fileManager.createFile(atPath: workoutInfoFilePath.path, contents: nil, attributes: nil) {
-            print("can't create file \(workoutInfoFilePath.lastPathComponent)")
-            return nil
-        }
-        
-        return WorkoutStore(dataFilePath: workoutDataFilePath, folder: nextWorkoutDir)
-    }
-    
-    func lastWorkoutData() -> (data: WorkoutData?, error: String) {
-        guard let stats = loadWorkoutStats() else {
-            return (nil, "error find last workout id")
-        }
-        
-        guard let docDir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            return (nil, "error find application document directory")
-        }
-        
-        let lastWorkoutDir = docDir.appendingPathComponent(String(stats.lastWorkoutId))
-        
-        let infoResult = loadWorkoutInfo(lastWorkoutDir.appendingPathComponent("info"))
-        guard let info = infoResult.info else {
-            return (nil, String(format: "error load workout info file: %@", infoResult.error))
-        }
-        
-        let dataResult = loadWorkoutData(lastWorkoutDir.appendingPathComponent("data"))
-        guard let data = dataResult.data else {
-            return (nil, String(format: "error load workout data file: %@", dataResult.error))
-        }
-        
-        let workout = WorkoutData(
-            id: stats.lastWorkoutId,
-            start: info.startDate(),
-            end: info.endDate(),
-            avgHeartRate: caclulateAvgHeartRate(data)
-        )
-        
-        return (workout, "")
-    }
-    
-    func loadWorkoutInfo(_ url: URL) -> (info: WorkoutInfo?, error: String) {
+    private func loadWorkoutInfo(_ url: URL) throws -> WorkoutInfo {
         var jsonResult: Any
         do {
             let data = try Data(contentsOf: url)
             jsonResult = try JSONSerialization.jsonObject(with: data)
         } catch {
-            return (nil, error.localizedDescription)
+            throw WorkoutStoreError.jsonError
         }
         guard let jsonDoc = jsonResult as? Dictionary<String, Any> else {
-            return (nil, "error cast json object to WorkoutData type")
+            throw WorkoutStoreError.jsonError
         }
         guard let start = jsonDoc["start"] as? String else {
-            return (nil, "error cast json object to WorkoutData type")
+            throw WorkoutStoreError.jsonError
         }
         guard let end = jsonDoc["end"] as? String else {
-            return (nil, "error cast json object to WorkoutData type")
+            throw WorkoutStoreError.jsonError
         }
-        let result = WorkoutInfo.parse(start: start, end: end)
-        guard let workout = result.info else {
-            return (nil, String(format: "error parse json object: %@", result.error))
+        guard let info = WorkoutInfo.parse(start: start, end: end) else {
+            throw WorkoutStoreError.jsonError
         }
-        return (workout, "")
+        return info
     }
     
-    func loadWorkoutData(_ url: URL) -> (data: [Int]?, error: String) {
-        var data: Data
-        do {
-            data = try Data(contentsOf: url)
-        } catch {
-            return (nil, error.localizedDescription)
-        }
+    private func loadWorkoutData(_ url: URL) throws -> [Int]? {
+        let data = try Data(contentsOf: url)
         let intOpt = dataToIntArr(data: data) as [Int]?
-        return (intOpt, "")
+        return intOpt
     }
     
-    func caclulateAvgHeartRate(_ data: [Int]) -> Int {
+    private func caclulateAvgHeartRate(_ data: [Int]) -> Int {
         var sum = 0
         for d in data {
             sum += d
         }
         return data.count != 0 ? sum / data.count : 0
-    }
-    
-    func saveWorkoutInfo(workoutId: Int, workout: WorkoutInfo) -> (success: Bool, error: String) {
-        guard let docDir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            return (false, "error find application document directory")
-        }
-        
-        let workoutDir = docDir.appendingPathComponent(String(workoutId))
-        let workoutInfoUrl = workoutDir.appendingPathComponent("info")
-        print("save to: ", workoutInfoUrl)
-        
-        let jsonDoc: Dictionary<String, Any> = [
-            "start": workout.start,
-            "end": workout.end
-        ]
-
-        do {
-            let fileHandle = try FileHandle(forWritingTo: workoutInfoUrl)
-            let jsonData = try JSONSerialization.data(withJSONObject: jsonDoc)
-            fileHandle.write(jsonData)
-            try fileHandle.close()
-        } catch {
-            return (false, error.localizedDescription)
-        }
-        
-        return (true, "")
     }
 }
 
@@ -222,16 +246,16 @@ struct WorkoutInfo: Codable {
         return fmt.date(from: self.end)!
     }
     
-    static func parse(start: String, end: String) -> (info: WorkoutInfo?, error: String) {
+    static func parse(start: String, end: String) -> WorkoutInfo? {
         let fmt = DateFormatter()
         fmt.timeStyle = .medium
         fmt.dateStyle = .medium
         if fmt.date(from: start) == nil {
-            return (nil, "error parse 'start' element")
+            return nil
         }
         if fmt.date(from: end) == nil {
-            return (nil, "error parse 'end' element")
+            return nil
         }
-        return (WorkoutInfo(start: start, end: end), "")
+        return WorkoutInfo(start: start, end: end)
     }
 }
