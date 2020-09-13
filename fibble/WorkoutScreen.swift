@@ -13,7 +13,7 @@ let focusedFont = Font.system(size: 100).monospacedDigit()
 struct WorkoutScreen: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @ObservedObject var workoutReport: WorkoutReport
-    @State var screenState = WorkoutScreenState()
+    @ObservedObject var screenState = WorkoutScreenState()
     var workoutPlan: WorkoutPlan
     
     var body: some View {
@@ -21,6 +21,8 @@ struct WorkoutScreen: View {
 //            Text(self.state == .ok ? "Workout \(workoutId)" : "Workout can't be recoreded")
 //                .foregroundColor(self.state == .ok ? .black : .red)
             ElapsedTimeView(elapsed: $screenState.elapsedTime)
+//            Text(String(format: "%02d:%02d:%02d", Int(self.screenState.elapsed) / 3600, Int(self.screenState.elapsed) / 60 % 60, Int(self.screenState.elapsed) % 60))
+                .font(Font.system(size: 80).monospacedDigit())
             Spacer()
             HStack {
                 Text("\(screenState.heartRate)")
@@ -109,13 +111,13 @@ enum WorkoutScreenError {
     case dataStoreError
 }
 
-class WorkoutScreenState {
+class WorkoutScreenState: ObservableObject {
     // visual
-    var elapsedTime = TimeInterval()
-    var heartRateOutOfRange = false
-    var showingAlert = false
-    var heartRate: Int = 0
-    var error = WorkoutScreenError.none
+    @Published var elapsedTime = TimeInterval()
+    @Published var heartRateOutOfRange = false
+    @Published var showingAlert = false
+    @Published var heartRate: Int = 0
+    @Published var error = WorkoutScreenError.none
     
     // non visual
     var timer: Timer? = nil
@@ -144,6 +146,7 @@ class WorkoutScreenState {
             if self.blockTimer {
                 return
             }
+            print("timer tick", self.elapsedTime)
             self.elapsedTime += 1
             self.workout.update(duration: self.elapsedTime)
             
