@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		F70B76A925045D660079A51E /* WorkoutPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70B76A825045D660079A51E /* WorkoutPlan.swift */; };
 		F70B76AB250483490079A51E /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70B76AA250483490079A51E /* AlertManager.swift */; };
-		F70B76AD250488440079A51E /* Blinker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70B76AC250488440079A51E /* Blinker.swift */; };
 		F70B76B325048F540079A51E /* TimeDurationFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70B76B225048F540079A51E /* TimeDurationFormatter.swift */; };
 		F70B76B92508718B0079A51E /* ElapsedTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70B76B82508718B0079A51E /* ElapsedTimeView.swift */; };
 		F7245C8E24ECBF620047322D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7245C8D24ECBF620047322D /* AppDelegate.swift */; };
@@ -26,8 +25,6 @@
 		F75552C1250EBA5200F7FDBB /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75552C0250EBA5200F7FDBB /* AlertView.swift */; };
 		F75552C3250ED71200F7FDBB /* WorkoutModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75552C2250ED71200F7FDBB /* WorkoutModel.swift */; };
 		F759390C24F7588E006FB243 /* ZoneRangeText.swift in Sources */ = {isa = PBXBuildFile; fileRef = F759390B24F7588E006FB243 /* ZoneRangeText.swift */; };
-		F759390E24F75D0B006FB243 /* ElapsedTimeText.swift in Sources */ = {isa = PBXBuildFile; fileRef = F759390D24F75D0B006FB243 /* ElapsedTimeText.swift */; };
-		F759391024F75F31006FB243 /* EndWorkoutAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = F759390F24F75F31006FB243 /* EndWorkoutAlert.swift */; };
 		F759391224F868AB006FB243 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F759391124F868AB006FB243 /* Settings.swift */; };
 		F759391424F869C3006FB243 /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F759391324F869C3006FB243 /* SettingsScreen.swift */; };
 		F759391624F8877C006FB243 /* StartScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F759391524F8877C006FB243 /* StartScreen.swift */; };
@@ -38,7 +35,6 @@
 /* Begin PBXFileReference section */
 		F70B76A825045D660079A51E /* WorkoutPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutPlan.swift; sourceTree = "<group>"; };
 		F70B76AA250483490079A51E /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
-		F70B76AC250488440079A51E /* Blinker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Blinker.swift; sourceTree = "<group>"; };
 		F70B76B225048F540079A51E /* TimeDurationFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeDurationFormatter.swift; sourceTree = "<group>"; };
 		F70B76B82508718B0079A51E /* ElapsedTimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElapsedTimeView.swift; sourceTree = "<group>"; };
 		F7245C8A24ECBF620047322D /* fibble.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = fibble.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -57,8 +53,6 @@
 		F75552C0250EBA5200F7FDBB /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
 		F75552C2250ED71200F7FDBB /* WorkoutModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutModel.swift; sourceTree = "<group>"; };
 		F759390B24F7588E006FB243 /* ZoneRangeText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoneRangeText.swift; sourceTree = "<group>"; };
-		F759390D24F75D0B006FB243 /* ElapsedTimeText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElapsedTimeText.swift; sourceTree = "<group>"; };
-		F759390F24F75F31006FB243 /* EndWorkoutAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndWorkoutAlert.swift; sourceTree = "<group>"; };
 		F759391124F868AB006FB243 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		F759391324F869C3006FB243 /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
 		F759391524F8877C006FB243 /* StartScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartScreen.swift; sourceTree = "<group>"; };
@@ -99,11 +93,8 @@
 				F70B76AA250483490079A51E /* AlertManager.swift */,
 				F75552C0250EBA5200F7FDBB /* AlertView.swift */,
 				F7245C8D24ECBF620047322D /* AppDelegate.swift */,
-				F70B76AC250488440079A51E /* Blinker.swift */,
 				F7245C9124ECBF620047322D /* ContentView.swift */,
-				F759390D24F75D0B006FB243 /* ElapsedTimeText.swift */,
 				F70B76B82508718B0079A51E /* ElapsedTimeView.swift */,
-				F759390F24F75F31006FB243 /* EndWorkoutAlert.swift */,
 				F7245CA124EEE5000047322D /* HeartRateListener.swift */,
 				F7AB60C7250ABD6400D1D4DA /* HeartRateMonitor.swift */,
 				F7245CA324F090180047322D /* HeartRateSensorDelegate.swift */,
@@ -209,12 +200,9 @@
 				F70B76AB250483490079A51E /* AlertManager.swift in Sources */,
 				F7245CA224EEE5000047322D /* HeartRateListener.swift in Sources */,
 				F759390C24F7588E006FB243 /* ZoneRangeText.swift in Sources */,
-				F759390E24F75D0B006FB243 /* ElapsedTimeText.swift in Sources */,
 				F7245CD424F2164D0047322D /* WorkoutDataStore.swift in Sources */,
 				F75552C1250EBA5200F7FDBB /* AlertView.swift in Sources */,
-				F759391024F75F31006FB243 /* EndWorkoutAlert.swift in Sources */,
 				F7245C8E24ECBF620047322D /* AppDelegate.swift in Sources */,
-				F70B76AD250488440079A51E /* Blinker.swift in Sources */,
 				F759391224F868AB006FB243 /* Settings.swift in Sources */,
 				F759391424F869C3006FB243 /* SettingsScreen.swift in Sources */,
 				F70B76B325048F540079A51E /* TimeDurationFormatter.swift in Sources */,
