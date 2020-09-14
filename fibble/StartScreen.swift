@@ -24,9 +24,10 @@ struct StartScreen: View {
                     Spacer()
                         .frame(height: 20)
                     Button(action: startWorkout) {
-                        NavigationLink(destination: WorkoutScreen(
-                            workoutReport: self.lastReport,
-                            workoutPlan: self.screenState.workouts[self.screenState.currentWorkout]))
+                        NavigationLink(destination:
+                            WorkoutScreen(workoutReport: self.lastReport)
+                                .environmentObject(WorkoutModel(plan: self.screenState.workouts[self.screenState.currentWorkout]))
+                        )
                         {
                             Text("Start Workout")
                         }
@@ -42,8 +43,9 @@ struct StartScreen: View {
                 }
                 VStack {
                     Divider()
-                    Text("Last Workout - \(lastReport.workoutId)")
+                    Text("Last Workout - \(lastReport.hasError ? "Error" : String(lastReport.workoutId))")
                         .font(.body)
+                        .foregroundColor(lastReport.hasError ? .red : .black)
                     List(self.lastReport.reportData) { data in
                         HStack {
                             Text("\(data.label)").foregroundColor(.gray)
@@ -69,11 +71,6 @@ struct StartScreen: View {
     }
     
     func startWorkout() {
-        
-    }
-    
-    func startFtpTest() {
-        
     }
 }
 
@@ -121,11 +118,12 @@ struct StartScreenState {
                 Fragment(
                     shortDescription: "Recovery",
                     description: "Recovery",
-                    duration: infiniteDuration,
+                    duration: 10.0,
                     zone: HeartRateZoneBuilder.byNumber(number: 1)
                 )
             ],
-            hydrationReminderEnabled: false
+            hydrationReminderEnabled: true,
+            heartRateAlertEnabled: true
         )
     ]
 #else

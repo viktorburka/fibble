@@ -36,7 +36,7 @@ class AlertManager {
     var enabled = true
     var muted = false
     
-    init(enabled: Bool) {
+    init(enabled: Bool = true) {
         self.enabled = enabled
     }
     

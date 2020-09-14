@@ -10,8 +10,6 @@
 		F70B76A925045D660079A51E /* WorkoutPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70B76A825045D660079A51E /* WorkoutPlan.swift */; };
 		F70B76AB250483490079A51E /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70B76AA250483490079A51E /* AlertManager.swift */; };
 		F70B76AD250488440079A51E /* Blinker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70B76AC250488440079A51E /* Blinker.swift */; };
-		F70B76AF25048A8C0079A51E /* HeartRateEvaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70B76AE25048A8C0079A51E /* HeartRateEvaluator.swift */; };
-		F70B76B125048E5C0079A51E /* HydrationReminder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70B76B025048E5C0079A51E /* HydrationReminder.swift */; };
 		F70B76B325048F540079A51E /* TimeDurationFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70B76B225048F540079A51E /* TimeDurationFormatter.swift */; };
 		F70B76B92508718B0079A51E /* ElapsedTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70B76B82508718B0079A51E /* ElapsedTimeView.swift */; };
 		F7245C8E24ECBF620047322D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7245C8D24ECBF620047322D /* AppDelegate.swift */; };
@@ -25,6 +23,8 @@
 		F7245CAA24F0BBD00047322D /* WorkoutScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7245CA924F0BBD00047322D /* WorkoutScreen.swift */; };
 		F7245CD424F2164D0047322D /* WorkoutDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7245CD324F2164D0047322D /* WorkoutDataStore.swift */; };
 		F740062B24F2EF9C00564CDF /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = F740062A24F2EF9C00564CDF /* Tools.swift */; };
+		F75552C1250EBA5200F7FDBB /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75552C0250EBA5200F7FDBB /* AlertView.swift */; };
+		F75552C3250ED71200F7FDBB /* WorkoutModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75552C2250ED71200F7FDBB /* WorkoutModel.swift */; };
 		F759390C24F7588E006FB243 /* ZoneRangeText.swift in Sources */ = {isa = PBXBuildFile; fileRef = F759390B24F7588E006FB243 /* ZoneRangeText.swift */; };
 		F759390E24F75D0B006FB243 /* ElapsedTimeText.swift in Sources */ = {isa = PBXBuildFile; fileRef = F759390D24F75D0B006FB243 /* ElapsedTimeText.swift */; };
 		F759391024F75F31006FB243 /* EndWorkoutAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = F759390F24F75F31006FB243 /* EndWorkoutAlert.swift */; };
@@ -39,8 +39,6 @@
 		F70B76A825045D660079A51E /* WorkoutPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutPlan.swift; sourceTree = "<group>"; };
 		F70B76AA250483490079A51E /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		F70B76AC250488440079A51E /* Blinker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Blinker.swift; sourceTree = "<group>"; };
-		F70B76AE25048A8C0079A51E /* HeartRateEvaluator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateEvaluator.swift; sourceTree = "<group>"; };
-		F70B76B025048E5C0079A51E /* HydrationReminder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HydrationReminder.swift; sourceTree = "<group>"; };
 		F70B76B225048F540079A51E /* TimeDurationFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeDurationFormatter.swift; sourceTree = "<group>"; };
 		F70B76B82508718B0079A51E /* ElapsedTimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElapsedTimeView.swift; sourceTree = "<group>"; };
 		F7245C8A24ECBF620047322D /* fibble.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = fibble.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -56,6 +54,8 @@
 		F7245CA924F0BBD00047322D /* WorkoutScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutScreen.swift; sourceTree = "<group>"; };
 		F7245CD324F2164D0047322D /* WorkoutDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutDataStore.swift; sourceTree = "<group>"; };
 		F740062A24F2EF9C00564CDF /* Tools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tools.swift; sourceTree = "<group>"; };
+		F75552C0250EBA5200F7FDBB /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
+		F75552C2250ED71200F7FDBB /* WorkoutModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutModel.swift; sourceTree = "<group>"; };
 		F759390B24F7588E006FB243 /* ZoneRangeText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoneRangeText.swift; sourceTree = "<group>"; };
 		F759390D24F75D0B006FB243 /* ElapsedTimeText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElapsedTimeText.swift; sourceTree = "<group>"; };
 		F759390F24F75F31006FB243 /* EndWorkoutAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndWorkoutAlert.swift; sourceTree = "<group>"; };
@@ -96,33 +96,33 @@
 		F7245C8C24ECBF620047322D /* fibble */ = {
 			isa = PBXGroup;
 			children = (
-				F7245C9524ECBF640047322D /* Preview Content */,
-				F7245C9324ECBF640047322D /* Assets.xcassets */,
-				F7245C9B24ECBF640047322D /* Info.plist */,
-				F7245C9824ECBF640047322D /* LaunchScreen.storyboard */,
+				F70B76AA250483490079A51E /* AlertManager.swift */,
+				F75552C0250EBA5200F7FDBB /* AlertView.swift */,
 				F7245C8D24ECBF620047322D /* AppDelegate.swift */,
-				F7245C8F24ECBF620047322D /* SceneDelegate.swift */,
+				F70B76AC250488440079A51E /* Blinker.swift */,
 				F7245C9124ECBF620047322D /* ContentView.swift */,
-				F7245CA124EEE5000047322D /* HeartRateListener.swift */,
-				F7245CA324F090180047322D /* HeartRateSensorDelegate.swift */,
-				F7245CA924F0BBD00047322D /* WorkoutScreen.swift */,
-				F7245CD324F2164D0047322D /* WorkoutDataStore.swift */,
-				F740062A24F2EF9C00564CDF /* Tools.swift */,
-				F759390B24F7588E006FB243 /* ZoneRangeText.swift */,
 				F759390D24F75D0B006FB243 /* ElapsedTimeText.swift */,
+				F70B76B82508718B0079A51E /* ElapsedTimeView.swift */,
 				F759390F24F75F31006FB243 /* EndWorkoutAlert.swift */,
+				F7245CA124EEE5000047322D /* HeartRateListener.swift */,
+				F7AB60C7250ABD6400D1D4DA /* HeartRateMonitor.swift */,
+				F7245CA324F090180047322D /* HeartRateSensorDelegate.swift */,
+				F79DEBBE250ADD870004C946 /* HeartRateZonesView.swift */,
+				F7245C8F24ECBF620047322D /* SceneDelegate.swift */,
 				F759391124F868AB006FB243 /* Settings.swift */,
 				F759391324F869C3006FB243 /* SettingsScreen.swift */,
 				F759391524F8877C006FB243 /* StartScreen.swift */,
-				F70B76A825045D660079A51E /* WorkoutPlan.swift */,
-				F70B76AA250483490079A51E /* AlertManager.swift */,
-				F70B76AC250488440079A51E /* Blinker.swift */,
-				F70B76AE25048A8C0079A51E /* HeartRateEvaluator.swift */,
-				F70B76B025048E5C0079A51E /* HydrationReminder.swift */,
 				F70B76B225048F540079A51E /* TimeDurationFormatter.swift */,
-				F70B76B82508718B0079A51E /* ElapsedTimeView.swift */,
-				F7AB60C7250ABD6400D1D4DA /* HeartRateMonitor.swift */,
-				F79DEBBE250ADD870004C946 /* HeartRateZonesView.swift */,
+				F740062A24F2EF9C00564CDF /* Tools.swift */,
+				F7245CD324F2164D0047322D /* WorkoutDataStore.swift */,
+				F75552C2250ED71200F7FDBB /* WorkoutModel.swift */,
+				F70B76A825045D660079A51E /* WorkoutPlan.swift */,
+				F7245CA924F0BBD00047322D /* WorkoutScreen.swift */,
+				F759390B24F7588E006FB243 /* ZoneRangeText.swift */,
+				F7245C9324ECBF640047322D /* Assets.xcassets */,
+				F7245C9B24ECBF640047322D /* Info.plist */,
+				F7245C9824ECBF640047322D /* LaunchScreen.storyboard */,
+				F7245C9524ECBF640047322D /* Preview Content */,
 			);
 			path = fibble;
 			sourceTree = "<group>";
@@ -211,9 +211,9 @@
 				F759390C24F7588E006FB243 /* ZoneRangeText.swift in Sources */,
 				F759390E24F75D0B006FB243 /* ElapsedTimeText.swift in Sources */,
 				F7245CD424F2164D0047322D /* WorkoutDataStore.swift in Sources */,
+				F75552C1250EBA5200F7FDBB /* AlertView.swift in Sources */,
 				F759391024F75F31006FB243 /* EndWorkoutAlert.swift in Sources */,
 				F7245C8E24ECBF620047322D /* AppDelegate.swift in Sources */,
-				F70B76B125048E5C0079A51E /* HydrationReminder.swift in Sources */,
 				F70B76AD250488440079A51E /* Blinker.swift in Sources */,
 				F759391224F868AB006FB243 /* Settings.swift in Sources */,
 				F759391424F869C3006FB243 /* SettingsScreen.swift in Sources */,
@@ -222,11 +222,11 @@
 				F7245C9024ECBF620047322D /* SceneDelegate.swift in Sources */,
 				F7245CA424F090180047322D /* HeartRateSensorDelegate.swift in Sources */,
 				F70B76B92508718B0079A51E /* ElapsedTimeView.swift in Sources */,
+				F75552C3250ED71200F7FDBB /* WorkoutModel.swift in Sources */,
 				F79DEBBF250ADD870004C946 /* HeartRateZonesView.swift in Sources */,
 				F759391624F8877C006FB243 /* StartScreen.swift in Sources */,
 				F7245C9224ECBF620047322D /* ContentView.swift in Sources */,
 				F7245CAA24F0BBD00047322D /* WorkoutScreen.swift in Sources */,
-				F70B76AF25048A8C0079A51E /* HeartRateEvaluator.swift in Sources */,
 				F740062B24F2EF9C00564CDF /* Tools.swift in Sources */,
 				F7AB60C8250ABD6400D1D4DA /* HeartRateMonitor.swift in Sources */,
 			);

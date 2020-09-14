@@ -8,7 +8,7 @@
 
 import Foundation
 
-class WorkoutPlan {
+class WorkoutPlan: ObservableObject {
     var id = 0
     var name = ""
     var fragments = [Fragment]()
