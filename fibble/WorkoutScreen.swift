@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-let focusedFont = Font.system(size: 100).monospacedDigit()
+let focusedFont = Font.system(size: 80).monospacedDigit()
 
 struct WorkoutScreen: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -18,23 +18,29 @@ struct WorkoutScreen: View {
     
     var body: some View {
         VStack {
-//            Text(self.state == .ok ? "Workout \(workoutId)" : "Workout can't be recorded")
-//                .foregroundColor(self.state == .ok ? .black : .red)
             ElapsedTimeView(elapsed: $workoutModel.elapsedTime)
                 .font(Font.system(size: 80).monospacedDigit())
             Spacer()
             HStack() {
                 Spacer()
-                Text("\(workoutModel.heartRate)")
-                    .font(focusedFont)
-                if validHeartRateZones(zones: HeartRateZoneBuilder.allZones()) && workoutModel.workout.displayHeartRateZones {
-                    HeartRateZonesView(zones: HeartRateZoneBuilder.allZones()!,
-                        heartRate: $workoutModel.heartRate,
-                        heartRateOutOfRange: $screenState.heartRateOutOfRange)
-                } else {
-                    Image(systemName: "heart.slash")
-                        .font(.system(size: 70, weight: .regular)).foregroundColor(.gray)
+                HStack(alignment: .top) {
+                    Text("\(workoutModel.heartRate)")
+                        .font(focusedFont)
+                    PulseView(pulse: $workoutModel.pulse)
                 }
+                if workoutModel.heartRateSensorConnected {
+                    if validHeartRateZones(zones: HeartRateZoneBuilder.allZones()) && workoutModel.workout.displayHeartRateZones {
+                        HeartRateZonesView(zones: HeartRateZoneBuilder.allZones()!,
+                            heartRate: $workoutModel.heartRate,
+                            heartRateOutOfRange: $screenState.heartRateOutOfRange)
+                    } else {
+                        Image(systemName: "heart.slash")
+                            .font(.system(size: 70, weight: .regular)).foregroundColor(.gray)
+                    }
+                } else {
+                    HeartRateConnectionView(state: $workoutModel.connectionState)
+                }
+                
                 AlertView(heartRateAlert: $workoutModel.heartRateAlert, hydrationAlert: $workoutModel.hydratonAlert)
             }.padding()
             Spacer()

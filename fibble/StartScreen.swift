@@ -118,7 +118,7 @@ struct StartScreenState {
                 Fragment(
                     shortDescription: "Recovery",
                     description: "Recovery",
-                    duration: 10.0,
+                    duration: 20.0,
                     zone: HeartRateZoneBuilder.byNumber(number: 1)
                 )
             ],

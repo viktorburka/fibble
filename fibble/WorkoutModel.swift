@@ -14,6 +14,9 @@ class WorkoutModel: ObservableObject {
     @Published var hydratonAlert = false
     @Published var heartRateAlert = false
     @Published var error = WorkoutError.none
+    @Published var heartRateSensorConnected = false
+    @Published var connectionState = HeartRateProviderState.powerOff
+    @Published var pulse = false
     
     var workout: WorkoutPlan
     
@@ -47,6 +50,9 @@ class WorkoutModel: ObservableObject {
         // create workout entry in data store
         startWorkoutDataStoreSession()
         
+        // connect heart rate sensor
+        connectHeartRateSensor()
+        
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
             if self.blockTimer {
                 return
@@ -61,7 +67,6 @@ class WorkoutModel: ObservableObject {
                 return
             }
             
-            self.updateHeartRate()
             self.recordHeartRate()
             self.updateHydrationAlert()
             self.updateHeartRateAlert()
@@ -77,11 +82,7 @@ class WorkoutModel: ObservableObject {
             handler()
         }
     }
-    
-    func updateHeartRate() {
-        self.heartRate = self.monitor.getHeartRate()
-    }
-    
+        
     func recordHeartRate() {
         let currentFragment = self.workout.currentFragment()
         if currentFragment.recordHeartRate {
@@ -138,6 +139,17 @@ class WorkoutModel: ObservableObject {
             self.workoutId = try self.dataStore.startWorkout()
         } catch {
             self.error = .dataStoreError
+        }
+    }
+    
+    private func connectHeartRateSensor() {
+        monitor.connectSensor() { state in 
+            self.connectionState = state
+            self.heartRateSensorConnected = state == .ready
+        }
+        monitor.listen() { heartRate in
+            self.heartRate = heartRate
+            self.pulse = !self.pulse
         }
     }
 }

@@ -23,7 +23,6 @@ class HeartRateSensorDelegate: NSObject, CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         guard let services = peripheral.services else { return }
         for service in services {
-            print(service)
             peripheral.discoverCharacteristics([heartRateMeasurementCharacteristicCBUUID], for: service)
         }
     }
@@ -31,9 +30,7 @@ class HeartRateSensorDelegate: NSObject, CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         guard let characteristics = service.characteristics else { return }
         for characteristic in characteristics {
-            print(characteristic)
             if characteristic.properties.contains(.notify) {
-                //print("\(characteristic.uuid): properties contains .notify")
                 peripheral.setNotifyValue(true, for: characteristic)
             }
         }
