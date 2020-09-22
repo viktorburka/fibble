@@ -27,8 +27,8 @@ struct Settings {
             HeartRateZone(number: 4, start: 164, end: 174),
             HeartRateZone(number: 5, start: 175, end: 186)
         ]
-        heartRateCalculation = HeartRateCalculationStrategy.manual
-        ftpTestAvgHeartRate = -1
+        heartRateCalculation = HeartRateCalculationStrategy.ftpTest
+        ftpTestAvgHeartRate = 154
     }
 }
 

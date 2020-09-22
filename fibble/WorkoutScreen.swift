@@ -120,8 +120,9 @@ struct WorkoutScreen_Previews: PreviewProvider {
         hydrationReminderEnabled: false,
         heartRateAlertEnabled: false
     )
+    static var monitor = createHeartRateMonitor()
     static var previews: some View {
         WorkoutScreen(workoutReport: WorkoutReport())
-            .environmentObject(WorkoutModel(plan: plan))
+            .environmentObject(WorkoutModel(plan: plan, monitor: monitor))
     }
 }

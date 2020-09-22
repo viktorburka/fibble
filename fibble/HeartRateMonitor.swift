@@ -16,6 +16,7 @@ enum HeartRateProviderState {
 protocol HeartRateProvider {
     func connectSensor(handler: @escaping (HeartRateProviderState) -> Void)
     func listen(handler: @escaping (Int) -> Void)
+    func state() -> HeartRateProviderState
 }
 
 class HeartRateMonitor: NSObject, HeartRateProvider, CBCentralManagerDelegate, CBPeripheralDelegate {
@@ -23,7 +24,7 @@ class HeartRateMonitor: NSObject, HeartRateProvider, CBCentralManagerDelegate, C
     
     var centralManager: CBCentralManager?
     var heartRateSensor: CBPeripheral!
-    var state = HeartRateProviderState.powerOff
+    var deviceState = HeartRateProviderState.powerOff
     
     var stateChangeHandlers = [(HeartRateProviderState) -> Void]()
     var heartRateUpdateHandlers = [(Int) -> Void]()
@@ -36,6 +37,10 @@ class HeartRateMonitor: NSObject, HeartRateProvider, CBCentralManagerDelegate, C
     func listen(handler: @escaping (Int) -> Void) {
         print("add listen handler")
         heartRateUpdateHandlers.append(handler)
+    }
+    
+    func state() -> HeartRateProviderState {
+        return self.deviceState
     }
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
@@ -78,7 +83,7 @@ class HeartRateMonitor: NSObject, HeartRateProvider, CBCentralManagerDelegate, C
     }
     
     private func updateState(state: HeartRateProviderState) {
-        self.state = state
+        self.deviceState = state
         for handler in stateChangeHandlers {
             handler(state)
         }
@@ -180,5 +185,9 @@ class HeartRateSimulator: HeartRateProvider {
             handler(values[index % values.count])
             index += 1
         }
+    }
+    
+    func state() -> HeartRateProviderState {
+        return HeartRateProviderState.ready
     }
 }

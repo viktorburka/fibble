@@ -11,6 +11,7 @@ import SwiftUI
 struct StartScreen: View {
     @State var screenState = StartScreenState()
     @ObservedObject var lastReport = WorkoutReport()
+    var monitor: HeartRateProvider = createHeartRateMonitor()
     var body: some View {
         NavigationView {
             VStack {
@@ -26,7 +27,12 @@ struct StartScreen: View {
                     Button(action: startWorkout) {
                         NavigationLink(destination:
                             WorkoutScreen(workoutReport: self.lastReport)
-                                .environmentObject(WorkoutModel(plan: self.screenState.workouts[self.screenState.currentWorkout]))
+                                        .environmentObject(
+                                            WorkoutModel(
+                                                plan: self.screenState.workouts[self.screenState.currentWorkout],
+                                                monitor: self.monitor
+                                            )
+                                        )
                         )
                         {
                             Text("Start Workout")
@@ -80,6 +86,14 @@ struct StartScreen_Previews: PreviewProvider {
     }
 }
 
+func createHeartRateMonitor() -> HeartRateProvider {
+#if targetEnvironment(simulator)
+    return HeartRateSimulator()
+#else
+    return HeartRateMonitor()
+#endif
+}
+
 struct StartScreenState {
     var state: ScreenState = .ok
     var errorText = "Unknown error"
@@ -87,30 +101,6 @@ struct StartScreenState {
     
 #if targetEnvironment(simulator)
     var workouts: [WorkoutPlan] = [
-//        Workout(
-//            id: 0,
-//            name: "FTP Test",
-//            intervals: [
-//                Fragment(
-//                    shortDescription: "Reach top speed",
-//                    description: "Reach top speed",
-//                    duration: 10.0
-//                ),
-//                Fragment(
-//                    shortDescription: "Speed you can barely maintain",
-//                    description: "High cadence, reach speed you can barely maintain",
-//                    duration: 10.0
-//                ),
-//                Fragment(
-//                    shortDescription: "Recovery",
-//                    description: "Recovery",
-//                    duration: 10.0
-//                )
-//            ],
-//            hydrationReminderEnabled: false,
-//            heartRateAlertEnabled: false,
-//            displayHeartRateZones: false
-//        )
         WorkoutPlan(
             id: 0,
             name: "Recovery",
@@ -119,6 +109,56 @@ struct StartScreenState {
                     shortDescription: "Recovery",
                     description: "Recovery",
                     duration: 20.0,
+                    zone: HeartRateZoneBuilder.byNumber(number: 1)
+                )
+            ],
+            hydrationReminderEnabled: true,
+            heartRateAlertEnabled: true
+        ),
+        WorkoutPlan(
+            id: 1,
+            name: "60-90 m. EM /w 3x8 m. SS (5 m. RBI)",
+            intervals: [
+                Fragment(
+                    shortDescription: "Warmup",
+                    description: "Warmup",
+                    duration: 10 * 2.0,
+                    zone: HeartRateZoneBuilder.byNumber(number: 1)
+                ),
+                Fragment(
+                    shortDescription: "Stready State",
+                    description: "Stready State",
+                    duration: 8 * 2.0,
+                    zone: HeartRateZoneBuilder.byNumber(number: 3)
+                ),
+                Fragment(
+                    shortDescription: "Rest",
+                    description: "Rest",
+                    duration: 5 * 2.0,
+                    zone: HeartRateZoneBuilder.byNumber(number: 1)
+                ),
+                Fragment(
+                    shortDescription: "Stready State",
+                    description: "Stready State",
+                    duration: 8 * 2.0,
+                    zone: HeartRateZoneBuilder.byNumber(number: 3)
+                ),
+                Fragment(
+                    shortDescription: "Rest",
+                    description: "Rest",
+                    duration: 5 * 2.0,
+                    zone: HeartRateZoneBuilder.byNumber(number: 1)
+                ),
+                Fragment(
+                    shortDescription: "Stready State",
+                    description: "Stready State",
+                    duration: 8 * 2.0,
+                    zone: HeartRateZoneBuilder.byNumber(number: 3)
+                ),
+                Fragment(
+                    shortDescription: "Easy Spin",
+                    description: "Easy Spin",
+                    duration: 15 * 2.0,
                     zone: HeartRateZoneBuilder.byNumber(number: 1)
                 )
             ],
@@ -178,6 +218,56 @@ struct StartScreenState {
                     duration: infiniteDuration
                 )
             ]
+        ),
+        WorkoutPlan(
+            id: 3,
+            name: "60-90 m. EM /w 3x8 m. SS (5 m. RBI)",
+            intervals: [
+                Fragment(
+                    shortDescription: "Warmup",
+                    description: "Warmup",
+                    duration: 10 * 60.0,
+                    zone: HeartRateZoneBuilder.byNumber(number: 1)
+                ),
+                Fragment(
+                    shortDescription: "Stready State",
+                    description: "Stready State",
+                    duration: 8 * 60.0,
+                    zone: HeartRateZoneBuilder.byNumber(number: 3)
+                ),
+                Fragment(
+                    shortDescription: "Rest",
+                    description: "Rest",
+                    duration: 5 * 60.0,
+                    zone: HeartRateZoneBuilder.byNumber(number: 1)
+                ),
+                Fragment(
+                    shortDescription: "Stready State",
+                    description: "Stready State",
+                    duration: 8 * 60.0,
+                    zone: HeartRateZoneBuilder.byNumber(number: 3)
+                ),
+                Fragment(
+                    shortDescription: "Rest",
+                    description: "Rest",
+                    duration: 5 * 60.0,
+                    zone: HeartRateZoneBuilder.byNumber(number: 1)
+                ),
+                Fragment(
+                    shortDescription: "Stready State",
+                    description: "Stready State",
+                    duration: 8 * 60.0,
+                    zone: HeartRateZoneBuilder.byNumber(number: 3)
+                ),
+                Fragment(
+                    shortDescription: "Easy Spin",
+                    description: "Easy Spin",
+                    duration: 15 * 60.0,
+                    zone: HeartRateZoneBuilder.byNumber(number: 1)
+                )
+            ],
+            hydrationReminderEnabled: false,
+            heartRateAlertEnabled: true
         )
     ]
 #endif

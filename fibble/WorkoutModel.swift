@@ -19,9 +19,9 @@ class WorkoutModel: ObservableObject {
     @Published var pulse = false
     
     var workout: WorkoutPlan
+    var monitor: HeartRateProvider
     
     var timer: Timer? = nil
-    var monitor: HeartRateProvider = createHeartRateMonitor()
     var dataStore: WorkoutDataStore = LocalFileStore()
     var alerts = AlertManager()
     
@@ -37,8 +37,9 @@ class WorkoutModel: ObservableObject {
         case dataStoreError
     }
     
-    init(plan: WorkoutPlan) {
+    init(plan: WorkoutPlan, monitor: HeartRateProvider) {
         self.workout = plan
+        self.monitor = monitor
     }
     
     func startWorkout() {
@@ -51,7 +52,10 @@ class WorkoutModel: ObservableObject {
         startWorkoutDataStoreSession()
         
         // connect heart rate sensor
-        connectHeartRateSensor()
+        monitor.listen() { heartRate in
+            self.heartRate = heartRate
+            self.pulse = !self.pulse
+        }
         
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
             if self.blockTimer {
@@ -141,23 +145,5 @@ class WorkoutModel: ObservableObject {
             self.error = .dataStoreError
         }
     }
-    
-    private func connectHeartRateSensor() {
-        monitor.connectSensor() { state in 
-            self.connectionState = state
-            self.heartRateSensorConnected = state == .ready
-        }
-        monitor.listen() { heartRate in
-            self.heartRate = heartRate
-            self.pulse = !self.pulse
-        }
-    }
 }
 
-func createHeartRateMonitor() -> HeartRateProvider {
-#if targetEnvironment(simulator)
-    return HeartRateSimulator()
-#else
-    return HeartRateMonitor()
-#endif
-}
