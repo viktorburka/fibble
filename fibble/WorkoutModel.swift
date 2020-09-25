@@ -40,6 +40,7 @@ class WorkoutModel: ObservableObject {
     init(plan: WorkoutPlan, monitor: HeartRateProvider) {
         self.workout = plan
         self.monitor = monitor
+        self.connectionState = monitor.state()
     }
     
     func startWorkout() {
@@ -50,6 +51,12 @@ class WorkoutModel: ObservableObject {
         
         // create workout entry in data store
         startWorkoutDataStoreSession()
+        
+        if monitor.state() != HeartRateProviderState.ready {
+            monitor.connectSensor { state in
+                self.connectionState = state
+            }
+        }
         
         // connect heart rate sensor
         monitor.listen() { heartRate in

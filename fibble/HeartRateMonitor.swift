@@ -91,9 +91,7 @@ class HeartRateMonitor: NSObject, HeartRateProvider, CBCentralManagerDelegate, C
     
     private func updateHeartRate(value: Int) {
         self.currentHeartRate = value
-        print("updateHeartRate:", value)
         for handler in heartRateUpdateHandlers {
-            print("call handler")
             handler(value)
         }
     }
@@ -126,7 +124,6 @@ class HeartRateMonitor: NSObject, HeartRateProvider, CBCentralManagerDelegate, C
       switch characteristic.uuid {
         case heartRateMeasurementCharacteristicCBUUID:
             let bpm = heartRate(from: characteristic)
-            print("bpm:", bpm)
             self.updateHeartRate(value: bpm)
         default:
           print("Unhandled Characteristic UUID: \(characteristic.uuid)")
@@ -151,6 +148,7 @@ class HeartRateMonitor: NSObject, HeartRateProvider, CBCentralManagerDelegate, C
 class HeartRateSimulator: HeartRateProvider {
     //var values = [80, 82, 85, 88, 90, 91, 92, 95, 97, 99, 100, 105, 106, 108, 111, 115, 118, 121, 125]
     var sendHeartRate = false
+    var currentState  = HeartRateProviderState.powerOff
     
     func connectSensor(handler: @escaping (HeartRateProviderState) -> Void) {
         let states = [
@@ -169,6 +167,7 @@ class HeartRateSimulator: HeartRateProvider {
                 timer.invalidate()
                 return
             } else {
+                self.currentState = states[index]
                 handler(states[index])
                 index += 1
             }
@@ -188,6 +187,6 @@ class HeartRateSimulator: HeartRateProvider {
     }
     
     func state() -> HeartRateProviderState {
-        return HeartRateProviderState.ready
+        return self.currentState
     }
 }

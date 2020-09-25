@@ -13,6 +13,7 @@ struct HeartRateConnectionView: View {
     var body: some View {
         Image(systemName: stateImage(state: self.state))
             .font(.system(size: 60, weight: .regular)).foregroundColor(.gray)
+            .opacity(state == .ready ? 0.0 : 1.0)
     }
     
     func stateImage(state: HeartRateProviderState) -> String {
