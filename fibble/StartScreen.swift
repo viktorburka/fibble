@@ -162,8 +162,8 @@ struct StartScreenState {
                     zone: HeartRateZoneBuilder.byNumber(number: 1)
                 )
             ],
-            hydrationReminderEnabled: true,
-            heartRateAlertEnabled: true
+            hydrationReminderEnabled: false,
+            heartRateAlertEnabled: false
         )
     ]
 #else
@@ -267,7 +267,7 @@ struct StartScreenState {
                 )
             ],
             hydrationReminderEnabled: false,
-            heartRateAlertEnabled: true
+            heartRateAlertEnabled: false
         )
     ]
 #endif

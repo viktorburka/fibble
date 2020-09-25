@@ -8,7 +8,7 @@
 
 import Foundation
 
-let infiniteHeartRate = 1000
+let infiniteHeartRate = 999
 let infiniteDuration = TimeInterval(24 * 60 * 60) // sec
 
 struct Settings {
@@ -21,11 +21,11 @@ struct Settings {
     
     init() {
         heartRateZones = [
-            HeartRateZone(number: 1, start: 126, end: 137),
-            HeartRateZone(number: 2, start: 138, end: 150),
-            HeartRateZone(number: 3, start: 151, end: 163),
-            HeartRateZone(number: 4, start: 164, end: 174),
-            HeartRateZone(number: 5, start: 175, end: 186)
+            HeartRateZone(number: 1, start:  77, end: 140),
+            HeartRateZone(number: 2, start: 136, end: 140),
+            HeartRateZone(number: 3, start: 141, end: 145),
+            HeartRateZone(number: 4, start: 146, end: 149),
+            HeartRateZone(number: 5, start: 154, end: infiniteHeartRate)
         ]
         heartRateCalculation = HeartRateCalculationStrategy.ftpTest
         ftpTestAvgHeartRate = 154

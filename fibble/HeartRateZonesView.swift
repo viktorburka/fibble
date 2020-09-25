@@ -17,7 +17,7 @@ struct HeartRateZonesView: View {
             ForEach(zones, id: \.number) { z in
                 Text(String(format: "Z%d  %d-%d", z.number, z.start, z.end))
                     .opacity(self.isHighlighted(zone: z, heartRate: self.heartRate) ? 1 : 0)
-                    .foregroundColor(self.heartRateOutOfRange ? .red : .black)
+                    .foregroundColor(self.heartRateOutOfRange ? .red : self.isHighlighted(zone: z, heartRate: self.heartRate) ? .black : .gray)
             }
         }
         .font(Font.system(size: 18).bold())
