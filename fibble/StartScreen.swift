@@ -164,6 +164,20 @@ struct StartScreenState {
             ],
             hydrationReminderEnabled: false,
             heartRateAlertEnabled: false
+        ),
+        WorkoutPlan(
+            id: 2,
+            name: "90-120 m. EM",
+            intervals: [
+                Fragment(
+                    shortDescription: "Endurance Miles",
+                    description: "Endurance Miles",
+                    duration: 120 * 60.0,
+                    zone: HeartRateZoneBuilder.byNumber(number: 1)
+                )
+            ],
+            hydrationReminderEnabled: true,
+            heartRateAlertEnabled: true
         )
     ]
 #else
@@ -295,7 +309,7 @@ struct StartScreenState {
                 )
             ],
             hydrationReminderEnabled: true,
-            heartRateAlertEnabled: true
+            heartRateAlertEnabled: false
         )
     ]
 #endif

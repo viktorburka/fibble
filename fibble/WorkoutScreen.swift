@@ -28,7 +28,7 @@ struct WorkoutScreen: View {
                         .font(focusedFont)
                     PulseView(pulse: $workoutModel.pulse)
                 }
-                if workoutModel.heartRateSensorConnected {
+                if workoutModel.connectionState == .ready {
                     if validHeartRateZones(zones: HeartRateZoneBuilder.allZones()) && workoutModel.workout.displayHeartRateZones {
                         HeartRateZonesView(zones: HeartRateZoneBuilder.allZones()!,
                             heartRate: $workoutModel.heartRate,

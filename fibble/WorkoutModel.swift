@@ -14,7 +14,6 @@ class WorkoutModel: ObservableObject {
     @Published var hydratonAlert = false
     @Published var heartRateAlert = false
     @Published var error = WorkoutError.none
-    @Published var heartRateSensorConnected = false
     @Published var connectionState = HeartRateProviderState.powerOff
     @Published var pulse = false
     
