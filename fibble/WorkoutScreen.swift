@@ -35,7 +35,8 @@ struct WorkoutScreen: View {
                             heartRateOutOfRange: $screenState.heartRateOutOfRange)
                     } else {
                         Image(systemName: "heart.slash")
-                            .font(.system(size: 70, weight: .regular)).foregroundColor(.gray)
+                            .font(.system(size: 70, weight: .regular))
+                            .foregroundColor(.gray)
                     }
                 } else {
                     HeartRateConnectionView(state: $workoutModel.connectionState)
@@ -44,11 +45,13 @@ struct WorkoutScreen: View {
                 AlertView(heartRateAlert: $workoutModel.heartRateAlert, hydrationAlert: $workoutModel.hydratonAlert)
             }.padding()
             Spacer()
-            VStack {
-                Text("\(workoutModel.workout.currentFragment().description) for \(TimeDurationFormatter(interval: workoutModel.workout.currentFragment().duration).prettyText)")
-                Spacer().frame(height: 30)
-                Text("Prepare to: \(workoutModel.workout.lastFragment() ? "workout end" : workoutModel.workout.nextFragment().shortDescription) for \(workoutModel.workout.lastFragment() ? "" : TimeDurationFormatter(interval: workoutModel.workout.nextFragment().duration).prettyText)")
-                    .opacity(!workoutModel.workout.lastFragment() && workoutModel.workout.currentFragment().ends(in: 5.0) ? 1 : 0)
+            VStack(spacing: 10) {
+                Text(workoutModel.currentFragmentText)
+                    .font(.system(size: 20, weight: .regular))
+                ElapsedTimeView(elapsed: $workoutModel.fragmentRemainedTime)
+                    .font(.system(size: 20, weight: .regular))
+                Text("Prepare to: \(workoutModel.prepareToText)")
+                    .opacity(workoutModel.workout.currentFragment().ends(in: 20.0) ? 1 : 0)
             }.padding()
             Spacer()
             Button(action: { self.screenState.showingAlert = true }) {

@@ -10,12 +10,15 @@ import Foundation
 
 class WorkoutModel: ObservableObject {
     @Published var elapsedTime = TimeInterval()
+    @Published var fragmentRemainedTime = TimeInterval()
     @Published var heartRate = 0
     @Published var hydratonAlert = false
     @Published var heartRateAlert = false
     @Published var error = WorkoutError.none
     @Published var connectionState = HeartRateProviderState.powerOff
     @Published var pulse = false
+    @Published var prepareToText = "Start workout"
+    @Published var currentFragmentText = "Start workout"
     
     var workout: WorkoutPlan
     var monitor: HeartRateProvider
@@ -80,6 +83,8 @@ class WorkoutModel: ObservableObject {
             self.recordHeartRate()
             self.updateHydrationAlert()
             self.updateHeartRateAlert()
+            self.updateFragmentRemainedTime()
+            self.updatePrepareToText()
         }
     }
     
@@ -130,6 +135,22 @@ class WorkoutModel: ObservableObject {
         if self.heartRateAlert {
             self.alerts.heartRateAlert()
         }
+    }
+    
+    func updateFragmentRemainedTime() {
+        self.fragmentRemainedTime = workout.currentFragment().duration - workout.currentFragment().elapsed
+    }
+    
+    func updatePrepareToText() {
+        var prepareTo: String
+        if workout.lastFragment() {
+            prepareTo = "workout end"
+        } else {
+            let nextSegmentDuration = TimeDurationFormatter(interval: workout.nextFragment().duration).prettyText
+            prepareTo = "\(workout.nextFragment().shortDescription) for \(nextSegmentDuration)"
+        }
+        self.prepareToText = prepareTo
+        self.currentFragmentText = "\(workout.currentFragment().description) for \(TimeDurationFormatter(interval: workout.currentFragment().duration).prettyText)"
     }
     
     func endWorkout() {

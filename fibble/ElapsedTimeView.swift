@@ -12,7 +12,7 @@ struct ElapsedTimeView: View {
     @Binding var elapsed: TimeInterval
     var body: some View {
         Text(String(format: "%02d:%02d:%02d", Int(elapsed) / 3600, Int(elapsed) / 60 % 60, Int(elapsed) % 60))
-            .font(Font.system(size: 80).monospacedDigit())
+//            .font(Font.system(size: 80).monospacedDigit())
     }
 }
 
