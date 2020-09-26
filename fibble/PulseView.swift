@@ -18,6 +18,21 @@ struct PulseView: View {
     }
 }
 
+struct PulseTextView: View {
+    @Binding var text: String
+    @State var pulse = false
+    private let animation = Animation.easeInOut(duration: 1).repeatForever(autoreverses: true)
+    var body: some View {
+        Text(text)
+            .opacity(pulse ? 1.0 : 0.0)
+            .onAppear {
+                withAnimation(self.animation, {
+                    self.pulse.toggle()
+                })
+            }
+    }
+}
+
 //struct PulseView_Previews: PreviewProvider {
 //    static var previews: some View {
 //        PulseView()

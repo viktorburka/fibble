@@ -112,8 +112,8 @@ struct StartScreenState {
                     zone: HeartRateZoneBuilder.byNumber(number: 1)
                 )
             ],
-            hydrationReminderEnabled: true,
-            heartRateAlertEnabled: true
+            hydrationReminderEnabled: false,
+            heartRateAlertEnabled: false
         ),
         WorkoutPlan(
             id: 1,
@@ -238,6 +238,13 @@ struct StartScreenState {
             name: "60-90 m. EM /w 3x8 m. SS (5 m. RBI)",
             intervals: [
                 Fragment(
+                    shortDescription: "Prepare",
+                    description: "Prepare",
+                    duration: 5 * 60.0,
+                    zone: HeartRateZoneBuilder.byNumber(number: 1),
+                    recordHeartRate: false
+                ),
+                Fragment(
                     shortDescription: "Warmup",
                     description: "Warmup",
                     duration: 10 * 60.0,
@@ -288,6 +295,13 @@ struct StartScreenState {
             name: "90-120 m. EM",
             intervals: [
                 Fragment(
+                    shortDescription: "Prepare",
+                    description: "Prepare",
+                    duration: 5 * 60.0,
+                    zone: HeartRateZoneBuilder.byNumber(number: 1),
+                    recordHeartRate: false
+                ),
+                Fragment(
                     shortDescription: "Endurance Miles",
                     description: "Endurance Miles",
                     duration: 120 * 60.0,
@@ -301,6 +315,13 @@ struct StartScreenState {
             id: 5,
             name: "90-120 m. EM (hilly terrain)",
             intervals: [
+                Fragment(
+                    shortDescription: "Prepare",
+                    description: "Prepare",
+                    duration: 5 * 60.0,
+                    zone: HeartRateZoneBuilder.byNumber(number: 1),
+                    recordHeartRate: false
+                ),
                 Fragment(
                     shortDescription: "Endurance Miles",
                     description: "Endurance Miles (hilly terrain)",

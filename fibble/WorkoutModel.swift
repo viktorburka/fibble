@@ -83,6 +83,7 @@ class WorkoutModel: ObservableObject {
             self.recordHeartRate()
             self.updateHydrationAlert()
             self.updateHeartRateAlert()
+            self.updateFragmentSwitchAlert()
             self.updateFragmentRemainedTime()
             self.updatePrepareToText()
         }
@@ -137,6 +138,12 @@ class WorkoutModel: ObservableObject {
         }
     }
     
+    func updateFragmentSwitchAlert() {
+        if workout.currentFragment().ends(in: 20.0) {
+            alerts.intervalEndAlert()
+        }
+    }
+    
     func updateFragmentRemainedTime() {
         self.fragmentRemainedTime = workout.currentFragment().duration - workout.currentFragment().elapsed
     }
@@ -149,7 +156,7 @@ class WorkoutModel: ObservableObject {
             let nextSegmentDuration = TimeDurationFormatter(interval: workout.nextFragment().duration).prettyText
             prepareTo = "\(workout.nextFragment().shortDescription) for \(nextSegmentDuration)"
         }
-        self.prepareToText = prepareTo
+        self.prepareToText = "Prepare to: \(prepareTo)"
         self.currentFragmentText = "\(workout.currentFragment().description) for \(TimeDurationFormatter(interval: workout.currentFragment().duration).prettyText)"
     }
     

@@ -50,7 +50,7 @@ struct WorkoutScreen: View {
                     .font(.system(size: 20, weight: .regular))
                 ElapsedTimeView(elapsed: $workoutModel.fragmentRemainedTime)
                     .font(.system(size: 20, weight: .regular))
-                Text("Prepare to: \(workoutModel.prepareToText)")
+                PulseTextView(text: $workoutModel.prepareToText)
                     .opacity(workoutModel.workout.currentFragment().ends(in: 20.0) ? 1 : 0)
             }.padding()
             Spacer()
